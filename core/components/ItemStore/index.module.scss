@@ -1,0 +1,116 @@
+.root {
+	user-select: none;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 13.84em;
+	transition:
+		transform 0.3s,
+		box-shadow 0.3s;
+	cursor: pointer;
+	gap: 0.5em;
+	position: relative;
+
+	img {
+		width: 100%;
+	}
+	.name {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: pre-wrap;
+		font-weight: 500;
+	}
+	.count {
+		white-space: nowrap;
+		font-size: 0.8em;
+		color: #0c0c0c60;
+		line-height: 1em;
+	}
+	.price {
+		background: -webkit-linear-gradient(130deg, #fd6d6d, #feca00);
+		background: linear-gradient(130deg, #fd6d6d, #feca00);
+		-webkit-background-clip: text;
+		-moz-background-clip: text;
+		background-clip: text;
+		color: transparent;
+		width: 100%;
+		white-space: nowrap;
+		font-weight: 500;
+	}
+	.discountPrice {
+		text-decoration: line-through;
+		font-size: 0.8em;
+		color: #0c0c0c60;
+	}
+	.discount {
+		color: white;
+		background: linear-gradient(130deg, #00ffff, #feca00);
+		position: absolute;
+		border-radius: 0.5em;
+		padding: 0.25em 0.5em;
+	}
+
+	&:hover {
+		transform: translateY(-0.5em);
+		box-shadow: 0 0.5em 0.85em #0c0c0c20;
+	}
+}
+.modalContent {
+	border: 0.001em solid #eeeeee;
+	padding: 0.5em;
+	border-radius: 0.5em;
+	background-color: #ffffff;
+}
+.modalButtonBuy {
+	border: 0;
+	border-radius: 0.5em;
+	background: linear-gradient(130deg, #fd6d6d, #feca00);
+	color: white;
+	transition: 0.3s;
+	&:hover {
+		background: linear-gradient(130deg, #fd6d6d, #feca00);
+		box-shadow: 0 0.2em 0.85em #0c0c0c20;
+	}
+}
+.modalText {
+	color: #9a9a9a;
+}
+.modalButtonMinus {
+	font-size: 1.25em;
+	align-items: center;
+	display: flex;
+	border-radius: 0.5em;
+	font-weight: 900;
+	background-color: #e9e9e9;
+	border: 0;
+	padding: 0.5em;
+	transition: 0.3s;
+	&:hover {
+		background-color: #fecab9;
+	}
+}
+.modalButtonPlus {
+	font-size: 1.25em;
+	align-items: center;
+	display: flex;
+	border-radius: 0.5em;
+	font-weight: 900;
+	background-color: #e9e9e9;
+	border: 0;
+	padding: 0.5em;
+	transition: 0.3s;
+	&:hover {
+		background-color: #fecab9;
+	}
+}
+.buyBlueprint {
+	border: 0;
+	border-radius: 0.5em;
+	background: linear-gradient(130deg, #3a74c0, #93b3dc);
+	color: white;
+	transition: 0.3s;
+	&:hover {
+		background: linear-gradient(130deg, #3a74c0, #93b3dc);
+		box-shadow: 0 0.2em 0.85em #0c0c0c20;
+	}
+}

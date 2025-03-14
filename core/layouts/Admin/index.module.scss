@@ -1,0 +1,39 @@
+.root {
+	height: 100vh;
+	gap: 0;
+	overflow: hidden;
+
+	.header {
+		background-color: var(--rui_color);
+		height: 4em;
+		padding: 0 1em;
+		.logo {
+			font-weight: 500;
+		}
+
+		.profile {
+			display: flex;
+			align-items: center;
+			gap: 0.5em;
+			font-weight: 500;
+
+			.avatar {
+				width: 2.5em;
+				border-radius: 0.5em;
+			}
+		}
+	}
+
+	.aside {
+		background-color: var(--rui_color30);
+		width: 300px;
+		height: calc(100vh - 4em);
+	}
+
+	.content {
+		padding: 1em;
+		flex: 1;
+		height: calc(100vh - 4em);
+		overflow: auto;
+	}
+}
