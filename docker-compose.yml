@@ -2,7 +2,7 @@ version: "3"
 name: "orbitalis"
 services:
     app:
-        image: "Orbitalis/indexsite"
+        image: "orbitalis/indexsite"
         build:
             context: .
         restart: always
