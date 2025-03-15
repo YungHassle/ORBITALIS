@@ -19,7 +19,19 @@
 				"name": "next"
 			}
 		],
-		"strictNullChecks": true
+		"strictNullChecks": true,
+		"paths": {
+			"_styles/*": ["./styles/*"],
+			"_public/*": ["./public/*"],
+			"_components/*": ["./core/components/*"],
+			"_constants/*": ["./core/constants/*"],
+			"_db": ["./core/db"],
+			"_layouts/*": ["./core/layouts/*"],
+			"_utils/*": ["./core/utils/*"],
+			"_hooks/*": ["./core/hooks/*"],
+			"_icons/*": ["./core/icons/*"],
+			"_api/*": ["./core/api/*"]
+		}
 	},
 	"include": ["svg.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/api/template.js", ".next/types/**/*.ts"],
 	"exclude": ["node_modules"]

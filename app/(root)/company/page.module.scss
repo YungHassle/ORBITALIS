@@ -1,2 +1,40 @@
 .root {
+	display: flex;
+	gap: 1em;
+	.helloGuestsBlock {
+		gap: 2em;
+		padding: 2em;
+		min-height: 49em;
+		box-shadow: var(--rui_shadow);
+		width: 66%;
+		background-color: var(--rui_white) !important;
+		border-radius: var(--rui_defaultBorder);
+		.headlineText {
+			font-size: 1.3em;
+		}
+		.imgLogo {
+			max-width: 100%;
+			max-height: 100%;
+			border-radius: var(--rui_defaultBorder);
+		}
+	}
+	.blockRight {
+		gap: 1em;
+		width: 34%;
+		.headline {
+			color: #7e7d7d;
+			font-size: 1.25em;
+		}
+		.point {
+			font-size: 1.15em;
+		}
+		.block {
+			width: 100%;
+			gap: 2em;
+			padding: 2em;
+			box-shadow: var(--rui_shadow);
+			background-color: var(--rui_white) !important;
+			border-radius: var(--rui_defaultBorder);
+		}
+	}
 }

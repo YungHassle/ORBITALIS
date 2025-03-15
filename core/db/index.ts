@@ -1,18 +1,16 @@
-import {Collection, Db, Document, MongoClient, ObjectId} from "mongodb"
+"use server"
 
-export {ObjectId}
+import {Collection, Db, Document, MongoClient} from "mongodb"
 
 const client = new MongoClient(process.env.MONGO_URL as string)
 
-export const collections = {
-	temp: "temp",
-	users: "users",
-}
-
-export type Coll = keyof typeof collections
-
 const connection = client.connect()
 const dbName = process.env.MONGO_DATABASE
+
+;(async () => {
+	const usersColl = await getColl("users")
+	usersColl.createIndex({username: 1}, {unique: true})
+})()
 
 export async function getDB(): Promise<Db> {
 	await connection
@@ -20,8 +18,8 @@ export async function getDB(): Promise<Db> {
 	return client.db(dbName)
 }
 
-export async function getColl(coll: Coll): Promise<Collection<Document>> {
+export async function getColl(coll: string): Promise<Collection<Document>> {
 	await connection
 
-	return client.db(dbName).collection(collections[coll] || coll)
+	return client.db(dbName).collection(coll)
 }

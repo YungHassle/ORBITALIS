@@ -1,2 +1,33 @@
 .root {
+	box-shadow: var(--rui_shadow);
+	background-color: var(--rui_white) !important;
+	border-radius: var(--rui_defaultBorder);
+	padding: 9em;
+	font-family: Arial, sans-serif;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1em;
+	min-height: 41em;
+	.headlineText {
+		font-size: 1.3em;
+	}
+
+	& [class~="react-calendar"] {
+		width: 100% !important;
+		min-width: 350px;
+		height: 100% !important;
+	}
+
+	.workDay {
+		background-color: #e6f7ff;
+	}
+}
+.holiday {
+	background-color: #fff1f0;
+	color: #ff4d4f;
+
+	&:hover {
+		background-color: #ffccc7;
+	}
 }

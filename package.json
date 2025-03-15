@@ -5,27 +5,29 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint",
-		"postinstall": "link-module-alias"
+		"lint": "next lint"
 	},
 	"dependencies": {
 		"@ant-design/icons": "^5.6.1",
 		"@ant-design/nextjs-registry": "^1.0.0",
 		"antd": "^5.18.0",
+		"bcrypt": "^5.1.1",
 		"cookies": "^0.9.1",
 		"framer-motion": "^11.2.0",
+		"html-react-parser": "^5.1.10",
 		"http-errors": "1.7.0",
 		"lodash": "^4.17.21",
 		"mongodb": "^6.6.1",
-		"next": "^14.2.3",
+		"next": "14",
 		"next-request-handler": "^1.0.12",
 		"node-steam-openid": "^1.2.0",
-		"html-react-parser": "^5.1.10",
 		"qs": "^6.10.2",
 		"rcon": "^1.1.0",
 		"rcon-client": "^4.2.4",
 		"react": "^18.2.0",
+		"react-calendar": "^5.1.0",
 		"react-dom": "^18.2.0",
+		"react-imask": "^6.4.3",
 		"sass": "^1.85.1",
 		"stream-telecom": "^1.0.0",
 		"svg-inline-loader": "^0.8.2",
@@ -33,29 +35,13 @@
 		"ws": "^8.17.0"
 	},
 	"devDependencies": {
+		"@types/bcrypt": "^5.0.2",
 		"@types/node": "^20.12.12",
 		"@types/react": "19.0.10",
 		"eslint": "^8.44.0",
 		"eslint-config-next": "^13.4.9",
-		"link-module-alias": "^1.2.0",
 		"nodemon": "^3.0.1",
 		"prettier": "^3.0.0",
 		"typescript": "^5.4.5"
-	},
-	"_moduleAliases": {
-		"_styles": "./styles",
-		"_public": "./public",
-		"_components": "./core/components",
-		"_constants": "./core/constants",
-		"_db": "./core/db",
-		"_layouts": "./core/layouts",
-		"_utils": "./core/utils",
-		"_hooks": "./core/hooks",
-		"_icons": "./core/icons"
-	},
-	"importSort": {
-		".js, .jsx, .ts, .tsx": {
-			"style": "module"
-		}
 	}
 }

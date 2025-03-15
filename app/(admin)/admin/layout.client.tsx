@@ -10,12 +10,8 @@ import {Avatar, Button, Dropdown, Flex} from "antd"
 import BaseIcon from "_components/BaseIcon"
 import logo from "_icons/logo.svg"
 import {useState} from "react"
-import {DatePicker} from "antd"
 
-const {RangePicker} = DatePicker
-
-export default function ClientLayout({children}) {
-	const user = {_id: "222", name: "222", avatar: undefined, balance: 0, username: "222"}
+export default function ClientLayout({children, user}) {
 	const router = useRouter()
 
 	const path = usePathname()
@@ -31,38 +27,14 @@ export default function ClientLayout({children}) {
 							<Link href='/'>
 								<Flex align='center' gap={"0.5em"}>
 									<BaseIcon svg={logo} style={{fontSize: "1.5em"}} />
-									<div className={classes.logo}>Orbitalis</div>
+									<div className={classes.logo}>Orbitalis — ADMIN</div>
 								</Flex>
 							</Link>
 							<Flex align='center' gap={"3em"}>
 								<Flex align='center' gap={selectHoliday ? "1em" : "1em"}>
-									<Button type='primary' size='large' style={{minWidth: "10em"}} onClick={() => router.replace("/admin")}>
-										Перейти в контрольную панель
+									<Button type='primary' size='large' onClick={() => router.replace("/")}>
+										Перейти в основное приложение
 									</Button>
-									<Button type='primary' size='large' style={{minWidth: "10em"}}>
-										Пройти тест
-									</Button>
-									{!selectHoliday && (
-										<Button type='primary' size='large' style={{minWidth: "10em"}} onClick={() => setSelectHoliday(true)}>
-											Выбрать отпуск
-										</Button>
-									)}
-									{selectHoliday && (
-										<Flex align='center' gap={"1em"}>
-											<RangePicker
-												size='large'
-												style={{minWidth: "24em"}}
-												placeholder={["Дата начала", "Дата окончания"]}
-												format='DD-MM-YYYY'
-											/>
-											<Button type='primary' size='large' style={{minWidth: "10em"}} onClick={() => setSelectHoliday(false)}>
-												Подтвердить
-											</Button>
-											<Button size='large' style={{minWidth: "10em"}} onClick={() => setSelectHoliday(false)}>
-												Отмена
-											</Button>
-										</Flex>
-									)}
 								</Flex>
 								<Dropdown
 									menu={{
@@ -92,7 +64,7 @@ export default function ClientLayout({children}) {
 									}}
 								>
 									<Flex align='center' gap={"1em"}>
-										<div className={classes.profile}>Екатерина</div>
+										<div className={classes.profile}>{user?.name}</div>
 										<Avatar size={"large"} className={classes.avatar} icon={<UserOutlined />} />
 									</Flex>
 								</Dropdown>
@@ -103,28 +75,16 @@ export default function ClientLayout({children}) {
 								basePath=''
 								items={[
 									{
-										key: "/",
+										key: "admin",
 										label: "Главная",
 									},
 									{
-										key: "news",
+										key: "admin/news",
 										label: "Новости",
 									},
 									{
-										key: "knowledgebase",
-										label: "База знаний",
-									},
-									{
-										key: "tasks",
+										key: "admin/tasks",
 										label: "Задачи",
-									},
-									{
-										key: "company",
-										label: "Компания",
-									},
-									{
-										key: "calendar",
-										label: "Календарь",
 									},
 								]}
 							/>

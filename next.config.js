@@ -5,13 +5,6 @@ module.exports = {
 	},
 
 	webpack: (config, {isServer}) => {
-		if (!isServer) {
-			config.resolve.fallback = {
-				fs: false,
-				path: false,
-				stream: false,
-			}
-		}
 		config.module.rules.push({
 			test: /\.(png|jpg|gif)$/i,
 			use: "url-loader",

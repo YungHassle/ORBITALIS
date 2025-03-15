@@ -28,7 +28,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 	return (
 		<html lang='ru'>
 			<body>
-				<AntdRegistry>
+				<AntdRegistry layer>
 					<ConfigProvider theme={THEME_ANTD} locale={localeRu}>
 						{children}
 					</ConfigProvider>
