@@ -96,7 +96,7 @@
 .helloGuestsBlock {
 	gap: 2em;
 	padding: 2em;
-	min-height: 49em;
+
 	box-shadow: var(--rui_shadow);
 	width: 100%;
 	background-color: var(--rui_white) !important;
@@ -109,4 +109,20 @@
 		max-height: 100%;
 		border-radius: var(--rui_defaultBorder);
 	}
+}
+.blockForAccept {
+	align-items: center;
+	display: flex;
+	gap: 1em;
+	width: 19.3em;
+	.name {
+		font-size: 1.1em;
+	}
+	.job {
+		color: #7e7d7d;
+		font-size: 0.9em;
+	}
+}
+.buttonAccept {
+	width: 10em;
 }

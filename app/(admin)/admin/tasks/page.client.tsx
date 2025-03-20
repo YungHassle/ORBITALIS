@@ -5,11 +5,13 @@ import classes from "./page.module.scss"
 import {LoadingOutlined, UserOutlined} from "@ant-design/icons"
 import {getRandomColor} from "_utils/getRandomColor"
 import {useState} from "react"
+import TextArea from "antd/es/input/TextArea"
 
 export default function ClientPage({}) {
 	const [loading, setLoading] = useState(false)
 	const [toRightData, setToRightData] = useState<any>(null)
 	const [createTaskModal, setCreateTaskModal] = useState(false)
+	const [changeTaskModal, setChangeTaskModal] = useState(false)
 
 	const categories = [
 		{name: "В работе", type: "work"},
@@ -155,17 +157,17 @@ export default function ClientPage({}) {
 					}}
 					footer={null}
 				>
-					<Form onFinish={async (data) => {}}>
+					<Form layout='vertical' onFinish={async (data) => {}}>
 						<Form.Item label='Название' name='username' rules={[{required: true}]}>
 							<Input />
 						</Form.Item>
 						<Form.Item label='Описание' name='username' rules={[{required: true}]}>
-							<Input />
+							<TextArea />
 						</Form.Item>
 						<Form.Item label='Назначить на' name='username' rules={[{required: true}]}>
 							<Select options={users.map((e) => ({label: e.name, value: e._id}))} />
 						</Form.Item>
-						<Button type='primary' htmlType='submit'>
+						<Button type='primary' htmlType='submit' style={{width: "100%"}}>
 							Создать
 						</Button>
 					</Form>
@@ -183,6 +185,9 @@ export default function ClientPage({}) {
 					)}
 					{!loading && toRightData && (
 						<Space className={classes.block} direction='vertical' size={20}>
+							<Button type='primary' size='large' className={classes.button} onClick={() => setChangeTaskModal(true)}>
+								Редактировать задачу
+							</Button>
 							<Flex justify='space-between' align='center'>
 								<div>ORB_{toRightData?.num}</div>
 								<Select
@@ -195,6 +200,29 @@ export default function ClientPage({}) {
 							<div className={classes.desc}>{toRightData?.desc}</div>
 						</Space>
 					)}
+					<Modal
+						title='Редактирование задачи'
+						open={changeTaskModal}
+						onCancel={() => {
+							setChangeTaskModal(false)
+						}}
+						footer={null}
+					>
+						<Form layout='vertical' onFinish={async (data) => {}}>
+							<Form.Item label='Название' name='username' rules={[{required: true}]}>
+								<Input />
+							</Form.Item>
+							<Form.Item label='Описание' name='username' rules={[{required: true}]}>
+								<TextArea />
+							</Form.Item>
+							<Form.Item label='Назначить на' name='username' rules={[{required: true}]}>
+								<Select options={users.map((e) => ({label: e.name, value: e._id}))} />
+							</Form.Item>
+							<Button type='primary' htmlType='submit' style={{width: "100%"}}>
+								Изменить
+							</Button>
+						</Form>
+					</Modal>
 				</Space>
 			</Flex>
 		</div>

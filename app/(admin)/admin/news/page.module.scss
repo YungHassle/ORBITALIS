@@ -1,5 +1,14 @@
 .root {
 	display: flex;
+	flex-direction: column;
+	gap: 1em;
+}
+.button {
+	align-self: flex-end;
+	width: 16em;
+}
+.list {
+	display: flex;
 	gap: 1em;
 	flex-wrap: wrap;
 }

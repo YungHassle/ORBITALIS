@@ -1,12 +1,15 @@
 "use client"
 
-import {Divider, Modal, Space, Tag} from "antd"
+import {Button, Divider, Flex, Form, Input, Modal, Space, Tag} from "antd"
 import classes from "./page.module.scss"
 import {useState} from "react"
+import TextArea from "antd/es/input/TextArea"
 
 export default function ClientPage({}) {
 	const [modalActive, setModalActive] = useState(false)
 	const [modalData, setModalData] = useState<any>({})
+	const [createNewsModal, setCreateNewsModal] = useState(false)
+	const [changeNewsModal, setChangeNewsModal] = useState(false)
 
 	const news = [
 		{
@@ -253,20 +256,152 @@ export default function ClientPage({}) {
 	]
 	return (
 		<div className={classes.root}>
-			{news?.map((e, i) => (
-				<Space
-					key={i}
-					direction='vertical'
-					className={classes.newCard}
-					onClick={() => {
-						setModalData(e)
-						setModalActive(true)
+			<Button
+				className={classes.button}
+				type='primary'
+				size='large'
+				onClick={() => {
+					setCreateNewsModal(true)
+				}}
+			>
+				Создать новость
+			</Button>
+			<Modal
+				title='Создание новости'
+				open={createNewsModal}
+				onCancel={() => {
+					setCreateNewsModal(false)
+				}}
+				footer={null}
+			>
+				<Form layout='vertical' onFinish={async (data) => {}}>
+					<Form.Item label='Название новости' name='title' rules={[{required: true}]}>
+						<TextArea />
+					</Form.Item>
+					<Form.Item label='Описание к названию' name='desc' rules={[{required: true}]}>
+						<TextArea />
+					</Form.Item>
+					<Form.Item label='Основное описание' name='desc' rules={[{required: true}]}>
+						<TextArea />
+					</Form.Item>
+					<Form.Item label='Теги' name='desc' rules={[{required: true}]}>
+						<Input />
+					</Form.Item>
+					<Button type='primary' htmlType='submit' style={{width: "100%"}}>
+						Создать
+					</Button>
+				</Form>
+			</Modal>
+			<Flex className={classes.list}>
+				<Modal
+					title='Редактирование новости'
+					open={changeNewsModal}
+					onCancel={() => {
+						setChangeNewsModal(false)
 					}}
+					footer={null}
 				>
-					<Space direction='vertical' style={{padding: "1em", width: "100%"}}>
-						{e.tags ? (
+					<Form layout='vertical' onFinish={async (data) => {}}>
+						<Form.Item label='Название новости' name='title' rules={[{required: true}]}>
+							<TextArea />
+						</Form.Item>
+						<Form.Item label='Описание к названию' name='desc' rules={[{required: true}]}>
+							<TextArea />
+						</Form.Item>
+						<Form.Item label='Основное описание' name='desc' rules={[{required: true}]}>
+							<TextArea />
+						</Form.Item>
+						<Form.Item label='Теги' name='desc' rules={[{required: true}]}>
+							<Input />
+						</Form.Item>
+						<Button type='primary' htmlType='submit' style={{width: "100%"}}>
+							Изменить
+						</Button>
+					</Form>
+				</Modal>
+				{news?.map((e, i) => (
+					<Space
+						key={i}
+						direction='vertical'
+						className={classes.newCard}
+						onClick={() => {
+							setModalData(e)
+							setModalActive(true)
+						}}
+					>
+						<Space direction='vertical' style={{padding: "1em", width: "100%"}}>
+							<Button
+								style={{width: "100%"}}
+								type='primary'
+								size='large'
+								onClick={(e) => {
+									e.stopPropagation()
+									setChangeNewsModal(true)
+								}}
+							>
+								Редактировать
+							</Button>
+							{e.tags ? (
+								<Space className={classes.goodTags}>
+									{e.tags.map((e1, i1) => (
+										<Tag key={i1} color={e1.type == "danger" ? "red" : e1.type == "warning" ? "orange" : "green"}>
+											{e1.text}
+										</Tag>
+									))}
+								</Space>
+							) : (
+								<Space className={classes.goodTags}>
+									<Tag color={"green"}>Новость</Tag>
+								</Space>
+							)}
+							<Space className={classes.tags} align='center'>
+								{e.createdAt && (
+									<Space>
+										<div>{"Опублиновано".toUpperCase()}</div>
+										<div>{new Date(e.createdAt).toLocaleDateString()}</div>
+									</Space>
+								)}
+								{e.endedAt && (
+									<>
+										{new Date(e.endedAt) > new Date() && (
+											<Space>
+												<div>{"Заканчивается".toUpperCase()}</div>
+												<div>{new Date(e.endedAt).toLocaleDateString()}</div>
+											</Space>
+										)}
+										{new Date(e.endedAt) < new Date() && (
+											<Space>
+												<div>{"Закончилось".toUpperCase()}</div>
+												<div>{new Date(e.endedAt).toLocaleDateString()}</div>
+											</Space>
+										)}
+									</>
+								)}
+							</Space>
+							{(e.headline || e.subheadline) && (
+								<Space direction='vertical'>
+									{(e.headline || e.subheadline) && (
+										<Space direction='vertical'>
+											{e.headline && <div className={classes.headline}>{e.headline}</div>}
+											{e.subheadline && <div className={classes.subheadline}>{e.subheadline}</div>}
+										</Space>
+									)}
+								</Space>
+							)}
+						</Space>
+					</Space>
+				))}
+				<Modal
+					open={modalActive}
+					onCancel={() => {
+						setModalActive(false)
+					}}
+					footer={null}
+				>
+					<Space direction='vertical' style={{padding: "2em 0 0 0", width: "100%"}}>
+						{modalData?.tags ? (
 							<Space className={classes.goodTags}>
-								{e.tags.map((e1, i1) => (
+								{modalData?.tags.map((e1, i1) => (
 									<Tag key={i1} color={e1.type == "danger" ? "red" : e1.type == "warning" ? "orange" : "green"}>
 										{e1.text}
 									</Tag>
@@ -278,129 +413,72 @@ export default function ClientPage({}) {
 							</Space>
 						)}
 						<Space className={classes.tags} align='center'>
-							{e.createdAt && (
+							{modalData?.createdAt && (
 								<Space>
 									<div>{"Опублиновано".toUpperCase()}</div>
-									<div>{new Date(e.createdAt).toLocaleDateString()}</div>
+									<div>{new Date(modalData?.createdAt).toLocaleDateString()}</div>
 								</Space>
 							)}
-							{e.endedAt && (
+							{modalData?.endedAt && (
 								<>
-									{new Date(e.endedAt) > new Date() && (
+									{new Date(modalData?.endedAt) > new Date() && (
 										<Space>
 											<div>{"Заканчивается".toUpperCase()}</div>
-											<div>{new Date(e.endedAt).toLocaleDateString()}</div>
+											<div>{new Date(modalData?.endedAt).toLocaleDateString()}</div>
 										</Space>
 									)}
-									{new Date(e.endedAt) < new Date() && (
+									{new Date(modalData?.endedAt) < new Date() && (
 										<Space>
 											<div>{"Закончилось".toUpperCase()}</div>
-											<div>{new Date(e.endedAt).toLocaleDateString()}</div>
+											<div>{new Date(modalData?.endedAt).toLocaleDateString()}</div>
 										</Space>
 									)}
 								</>
 							)}
 						</Space>
-						{(e.headline || e.subheadline) && (
+						{(modalData?.headline || modalData?.subheadline) && (
 							<Space direction='vertical'>
-								{(e.headline || e.subheadline) && (
+								{(modalData?.headline || modalData?.subheadline) && (
 									<Space direction='vertical'>
-										{e.headline && <div className={classes.headline}>{e.headline}</div>}
-										{e.subheadline && <div className={classes.subheadline}>{e.subheadline}</div>}
+										{modalData?.headline && <div className={classes.headline}>{modalData?.headline}</div>}
+										{modalData?.subheadline && <div className={classes.subheadline}>{modalData?.subheadline}</div>}
 									</Space>
 								)}
 							</Space>
 						)}
-					</Space>
-				</Space>
-			))}
-			<Modal
-				open={modalActive}
-				onCancel={() => {
-					setModalActive(false)
-				}}
-				footer={null}
-			>
-				<Space direction='vertical' style={{padding: "2em 0 0 0", width: "100%"}}>
-					{modalData?.tags ? (
-						<Space className={classes.goodTags}>
-							{modalData?.tags.map((e1, i1) => (
-								<Tag key={i1} color={e1.type == "danger" ? "red" : e1.type == "warning" ? "orange" : "green"}>
-									{e1.text}
-								</Tag>
-							))}
-						</Space>
-					) : (
-						<Space className={classes.goodTags}>
-							<Tag color={"green"}>Новость</Tag>
-						</Space>
-					)}
-					<Space className={classes.tags} align='center'>
-						{modalData?.createdAt && (
-							<Space>
-								<div>{"Опублиновано".toUpperCase()}</div>
-								<div>{new Date(modalData?.createdAt).toLocaleDateString()}</div>
+						{modalData?.img && (
+							<div className={classes.banner}>
+								<img src={modalData?.img} />
+							</div>
+						)}
+						{modalData?.description && <Divider />}
+						{modalData?.description && (
+							<Space direction='vertical'>
+								{modalData?.description.map((e1, i1) => (
+									<>
+										{e1.type == "text" && (
+											<Space direction='vertical' key={i1}>
+												<div>{e1.title}</div>
+												{e1.desc &&
+													e1.desc.map((e2, i2) => (
+														<div key={i2} className={classes.descForText}>
+															{e2}
+														</div>
+													))}
+											</Space>
+										)}
+										{e1.type == "img" && (
+											<div className={classes.banner}>
+												<img src={e1.img} />
+											</div>
+										)}
+									</>
+								))}
 							</Space>
 						)}
-						{modalData?.endedAt && (
-							<>
-								{new Date(modalData?.endedAt) > new Date() && (
-									<Space>
-										<div>{"Заканчивается".toUpperCase()}</div>
-										<div>{new Date(modalData?.endedAt).toLocaleDateString()}</div>
-									</Space>
-								)}
-								{new Date(modalData?.endedAt) < new Date() && (
-									<Space>
-										<div>{"Закончилось".toUpperCase()}</div>
-										<div>{new Date(modalData?.endedAt).toLocaleDateString()}</div>
-									</Space>
-								)}
-							</>
-						)}
 					</Space>
-					{(modalData?.headline || modalData?.subheadline) && (
-						<Space direction='vertical'>
-							{(modalData?.headline || modalData?.subheadline) && (
-								<Space direction='vertical'>
-									{modalData?.headline && <div className={classes.headline}>{modalData?.headline}</div>}
-									{modalData?.subheadline && <div className={classes.subheadline}>{modalData?.subheadline}</div>}
-								</Space>
-							)}
-						</Space>
-					)}
-					{modalData?.img && (
-						<div className={classes.banner}>
-							<img src={modalData?.img} />
-						</div>
-					)}
-					{modalData?.description && <Divider />}
-					{modalData?.description && (
-						<Space direction='vertical'>
-							{modalData?.description.map((e1, i1) => (
-								<>
-									{e1.type == "text" && (
-										<Space direction='vertical' key={i1}>
-											<div>{e1.title}</div>
-											{e1.desc &&
-												e1.desc.map((e2, i2) => (
-													<div key={i2} className={classes.descForText}>
-														{e2}
-													</div>
-												))}
-										</Space>
-									)}
-									{e1.type == "img" && (
-										<div className={classes.banner}>
-											<img src={e1.img} />
-										</div>
-									)}
-								</>
-							))}
-						</Space>
-					)}
-				</Space>
-			</Modal>
+				</Modal>
+			</Flex>
 		</div>
 	)
 }
