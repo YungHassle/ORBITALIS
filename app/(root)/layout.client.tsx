@@ -14,8 +14,7 @@ import {DatePicker} from "antd"
 
 const {RangePicker} = DatePicker
 
-export default function ClientLayout({children}) {
-	const user = {_id: "222", name: "222", avatar: undefined, balance: 0, username: "222"}
+export default function ClientLayout({children, user}) {
 	const router = useRouter()
 
 	const path = usePathname()
@@ -92,7 +91,7 @@ export default function ClientLayout({children}) {
 									}}
 								>
 									<Flex align='center' gap={"1em"}>
-										<div className={classes.profile}>Екатерина</div>
+										<div className={classes.profile}>{user?.name}</div>
 										<Avatar size={"large"} className={classes.avatar} icon={<UserOutlined />} />
 									</Flex>
 								</Dropdown>

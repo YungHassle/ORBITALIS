@@ -1,6 +1,6 @@
 "use client"
 
-import {Avatar, Flex, Select, Space, Spin, Tooltip} from "antd"
+import {Avatar, Button, Flex, Form, Input, Modal, Select, Space, Spin, Tooltip} from "antd"
 import classes from "./page.module.scss"
 import {LoadingOutlined, UserOutlined} from "@ant-design/icons"
 import {getRandomColor} from "_utils/getRandomColor"
@@ -9,6 +9,7 @@ import {useState} from "react"
 export default function ClientPage({}) {
 	const [loading, setLoading] = useState(false)
 	const [toRightData, setToRightData] = useState<any>(null)
+	const [createTaskModal, setCreateTaskModal] = useState(false)
 
 	const categories = [
 		{name: "В работе", type: "work"},
@@ -107,6 +108,12 @@ export default function ClientPage({}) {
 		},
 	]
 
+	const users = [
+		{name: "Оксана", _id: 1},
+		{name: "Андрей", _id: 2},
+		{name: "Артем", _id: 3},
+	]
+
 	return (
 		<div className={classes.root}>
 			<Space direction='vertical' className={classes.blockLeft}>
@@ -130,32 +137,66 @@ export default function ClientPage({}) {
 					</Space>
 				))}
 			</Space>
-			<Space direction='vertical' className={classes.blockRight}>
-				{!loading && toRightData == null && (
-					<Space className={classes.block} direction='vertical' size={20} style={{justifyContent: "center", alignItems: "center"}}>
-						<div style={{fontSize: "1.35em"}}>Добро пожаловать в раздел задачи!</div>
-					</Space>
-				)}
-				{loading && (
-					<Space style={{width: "100%", height: "38em", justifyContent: "center", alignItems: "center"}}>
-						<Spin indicator={<LoadingOutlined style={{fontSize: 100}} spin />} />
-					</Space>
-				)}
-				{!loading && toRightData && (
-					<Space className={classes.block} direction='vertical' size={20}>
-						<Flex justify='space-between' align='center'>
-							<div>ORB_{toRightData?.num}</div>
-							<Select
-								className={classes.select}
-								value={toRightData?.type}
-								options={categories?.map((e, i) => ({label: e.name, value: e.type}))}
-							/>
-						</Flex>
-						<div className={classes.name}>{toRightData?.name}</div>
-						<div className={classes.desc}>{toRightData?.desc}</div>
-					</Space>
-				)}
-			</Space>
+			<Flex vertical style={{width: "34%"}} gap={"1em"}>
+				<Button
+					type='primary'
+					size='large'
+					onClick={() => {
+						setCreateTaskModal(true)
+					}}
+				>
+					Создать задачу
+				</Button>
+				<Modal
+					title='Создание задачи'
+					open={createTaskModal}
+					onCancel={() => {
+						setCreateTaskModal(false)
+					}}
+					footer={null}
+				>
+					<Form onFinish={async (data) => {}}>
+						<Form.Item label='Название' name='username' rules={[{required: true}]}>
+							<Input />
+						</Form.Item>
+						<Form.Item label='Описание' name='username' rules={[{required: true}]}>
+							<Input />
+						</Form.Item>
+						<Form.Item label='Назначить на' name='username' rules={[{required: true}]}>
+							<Select options={users.map((e) => ({label: e.name, value: e._id}))} />
+						</Form.Item>
+						<Button type='primary' htmlType='submit'>
+							Создать
+						</Button>
+					</Form>
+				</Modal>
+				<Space direction='vertical' className={classes.blockRight}>
+					{!loading && toRightData == null && (
+						<Space className={classes.block} direction='vertical' size={20} style={{justifyContent: "center", alignItems: "center"}}>
+							<div style={{fontSize: "1.35em"}}>Добро пожаловать в раздел задачи!</div>
+						</Space>
+					)}
+					{loading && (
+						<Space style={{width: "100%", height: "36em", justifyContent: "center", alignItems: "center"}}>
+							<Spin indicator={<LoadingOutlined style={{fontSize: 100}} spin />} />
+						</Space>
+					)}
+					{!loading && toRightData && (
+						<Space className={classes.block} direction='vertical' size={20}>
+							<Flex justify='space-between' align='center'>
+								<div>ORB_{toRightData?.num}</div>
+								<Select
+									className={classes.select}
+									value={toRightData?.type}
+									options={categories?.map((e, i) => ({label: e.name, value: e.type}))}
+								/>
+							</Flex>
+							<div className={classes.name}>{toRightData?.name}</div>
+							<div className={classes.desc}>{toRightData?.desc}</div>
+						</Space>
+					)}
+				</Space>
+			</Flex>
 		</div>
 	)
 }

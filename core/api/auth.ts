@@ -64,8 +64,32 @@ export async function login(username: string, password: string) {
 	}
 }
 
-export async function register() {
-	// bcrypt.hashSync(password, 10)
+export async function register(username: string, password: string, name: string) {
+	const users = await getColl("users")
+
+	// Проверяем, существует ли пользователь с таким же username
+	const existingUser = await users.findOne({username})
+	if (existingUser) {
+		return {
+			isAuthenticated: false,
+			error: "USERNAME_ALREADY_EXISTS",
+		}
+	}
+
+	// Хэшируем пароль перед сохранением
+	const hashedPassword = bcrypt.hashSync(password, 10)
+
+	// Создаем нового пользователя
+	const newUser = {
+		username,
+		password: hashedPassword,
+		name,
+		createdAt: new Date(),
+	}
+
+	// Сохраняем пользователя в базе данных
+	await users.insertOne(newUser)
+
 	return {
 		isAuthenticated: true,
 	}

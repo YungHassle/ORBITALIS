@@ -1,7 +1,7 @@
 "use client"
 
 import {Button, Form, Input} from "antd"
-import {getAuth, login} from "_api/auth"
+import {getAuth, register} from "_api/auth"
 import {useEffect} from "react"
 import {useRouter} from "next/navigation"
 
@@ -18,23 +18,26 @@ export default function Page({}) {
 		<div>
 			<Form
 				onFinish={async (data) => {
-					login(data.username, data.password).then((res) => {
+					register(data.username, data.password, data.name).then((res) => {
 						if (res.error) {
 							return
 						} else {
-							router.replace("/")
+							router.replace("/auth")
 						}
 					})
 				}}
 			>
-				<Form.Item label='Username' name='username' rules={[{required: true}]}>
+				<Form.Item label='Username' name='username' rules={[{required: true, message: "Please input your username!"}]}>
 					<Input />
 				</Form.Item>
 				<Form.Item label='Password' name='password' rules={[{required: true, message: "Please input your password!"}]}>
 					<Input type='password' />
 				</Form.Item>
+				<Form.Item label='Name' name='name' rules={[{required: true, message: "Please input your name!"}]}>
+					<Input />
+				</Form.Item>
 				<Button type='primary' htmlType='submit'>
-					Login
+					Registration
 				</Button>
 			</Form>
 		</div>
