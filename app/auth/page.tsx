@@ -1,9 +1,10 @@
 "use client"
 
-import {Button, Form, Input} from "antd"
+import {Button, Flex, Form, Input} from "antd"
 import {getAuth, login} from "_api/auth"
 import {useEffect} from "react"
 import {useRouter} from "next/navigation"
+import classes from "./page.module.scss"
 
 export default function Page({}) {
 	const router = useRouter()
@@ -15,8 +16,10 @@ export default function Page({}) {
 	// }, [])
 
 	return (
-		<div>
+		<div className={classes.root}>
 			<Form
+				layout='vertical'
+				className={classes.form}
 				onFinish={async (data) => {
 					login(data.username, data.password).then((res) => {
 						if (res.error) {
@@ -27,14 +30,16 @@ export default function Page({}) {
 					})
 				}}
 			>
-				<Form.Item label='Username' name='username' rules={[{required: true}]}>
-					<Input />
-				</Form.Item>
-				<Form.Item label='Password' name='password' rules={[{required: true, message: "Please input your password!"}]}>
-					<Input type='password' />
-				</Form.Item>
-				<Button type='primary' htmlType='submit'>
-					Login
+				<Flex vertical>
+					<Form.Item label='Логин' name='username' rules={[{required: true}]}>
+						<Input />
+					</Form.Item>
+					<Form.Item label='Пароль' name='password' rules={[{required: true, message: "Please input your password!"}]}>
+						<Input type='password' />
+					</Form.Item>
+				</Flex>
+				<Button type='primary' htmlType='submit' style={{width: "100%"}}>
+					Авторизоваться
 				</Button>
 			</Form>
 		</div>
