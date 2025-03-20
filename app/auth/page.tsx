@@ -30,6 +30,7 @@ export default function Page({}) {
 					})
 				}}
 			>
+				<div className={classes.headline}>Авторизация</div>
 				<Flex vertical>
 					<Form.Item label='Логин' name='username' rules={[{required: true}]}>
 						<Input />
