@@ -3,6 +3,7 @@
 import {getColl} from "_db"
 import crypt from "_utils/crypt"
 import decrypt from "_utils/decrypt"
+import {getRandomColor} from "_utils/getRandomColor"
 import bcrypt from "bcrypt"
 import {cookies} from "next/headers"
 
@@ -85,6 +86,7 @@ export async function register(username: string, password: string, name: string)
 		password: hashedPassword,
 		name,
 		createdAt: new Date(),
+		color: getRandomColor(),
 	}
 
 	// Сохраняем пользователя в базе данных

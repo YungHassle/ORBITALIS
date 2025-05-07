@@ -1,5 +1,7 @@
+import {getUsersLeadersList} from "_api/admin/userAcceptList"
 import ClientPage from "./page.client"
 
 export default async function Page() {
-	return <ClientPage />
+	const leaders = await getUsersLeadersList()
+	return <ClientPage leaders={leaders} />
 }

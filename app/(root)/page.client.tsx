@@ -6,7 +6,7 @@ import {useState} from "react"
 import {FallOutlined, FundOutlined, PieChartOutlined, RadarChartOutlined, RiseOutlined, UserOutlined} from "@ant-design/icons"
 import {getRandomColor} from "_utils/getRandomColor"
 
-export default function ClientPage() {
+export default function ClientPage({leaders}) {
 	const user = {_id: "222"}
 	const [items, setItems] = useState<any>([])
 
@@ -294,62 +294,15 @@ export default function ClientPage() {
 				<Flex className={classes.block} vertical gap={"1em"}>
 					<Flex className={classes.headline}>Руководители</Flex>
 					<Flex wrap gap={"1em"}>
-						<Flex align='center' className={classes.blockInBlock}>
-							<Avatar size={"large"} style={{backgroundColor: getRandomColor()}} icon={<UserOutlined />} />
-							<Flex vertical>
-								<div className={classes.name}>Савина Варвара</div>
-								<div className={classes.job}>Технический директор</div>
+						{leaders.map((e, i) => (
+							<Flex key={i} align='center' className={classes.blockInBlock}>
+								<Avatar size={"large"} style={{backgroundColor: e?.color, minWidth: "40px"}} icon={<UserOutlined />} />
+								<Flex vertical>
+									<div className={classes.name}>{e?.name}</div>
+									<div className={classes.job}>{e?.position}</div>
+								</Flex>
 							</Flex>
-						</Flex>
-						<Flex align='center' className={classes.blockInBlock}>
-							<Avatar size={"large"} style={{backgroundColor: getRandomColor()}} icon={<UserOutlined />} />
-							<Flex vertical>
-								<div className={classes.name}>Худяков Пётр</div>
-								<div className={classes.job}>Производственный директор</div>
-							</Flex>
-						</Flex>
-						<Flex align='center' className={classes.blockInBlock}>
-							<Avatar size={"large"} style={{backgroundColor: getRandomColor()}} icon={<UserOutlined />} />
-							<Flex vertical>
-								<div className={classes.name}>Павлов Мирон</div>
-								<div className={classes.job}>Генеральный директор</div>
-							</Flex>
-						</Flex>
-						<Flex align='center' className={classes.blockInBlock}>
-							<Avatar size={"large"} style={{backgroundColor: getRandomColor()}} icon={<UserOutlined />} />
-							<Flex vertical>
-								<div className={classes.name}>Степанова Алиса</div>
-								<div className={classes.job}>Менеджер</div>
-							</Flex>
-						</Flex>
-						<Flex align='center' className={classes.blockInBlock}>
-							<Avatar size={"large"} style={{backgroundColor: getRandomColor()}} icon={<UserOutlined />} />
-							<Flex vertical>
-								<div className={classes.name}>Романов Дмитрий</div>
-								<div className={classes.job}>Менеджер</div>
-							</Flex>
-						</Flex>
-						<Flex align='center' className={classes.blockInBlock}>
-							<Avatar size={"large"} style={{backgroundColor: getRandomColor()}} icon={<UserOutlined />} />
-							<Flex vertical>
-								<div className={classes.name}>Смирнова Александра</div>
-								<div className={classes.job}>Менеджер</div>
-							</Flex>
-						</Flex>
-						<Flex align='center' className={classes.blockInBlock}>
-							<Avatar size={"large"} style={{backgroundColor: getRandomColor()}} icon={<UserOutlined />} />
-							<Flex vertical>
-								<div className={classes.name}>Винокуров Александр</div>
-								<div className={classes.job}>Менеджер</div>
-							</Flex>
-						</Flex>
-						<Flex align='center' className={classes.blockInBlock}>
-							<Avatar size={"large"} style={{backgroundColor: getRandomColor()}} icon={<UserOutlined />} />
-							<Flex vertical>
-								<div className={classes.name}>Басова Мария</div>
-								<div className={classes.job}>Менеджер</div>
-							</Flex>
-						</Flex>
+						))}
 					</Flex>
 				</Flex>
 				<Flex className={classes.block} vertical gap={"1em"}>

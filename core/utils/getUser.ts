@@ -9,6 +9,7 @@ export interface IUser {
 	_id: string
 	username: string
 	name: string
+	role?: string
 }
 
 export async function getUser(): Promise<IUser | null> {

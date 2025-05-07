@@ -35,9 +35,11 @@ export default function ClientLayout({children, user}) {
 							</Link>
 							<Flex align='center' gap={"3em"}>
 								<Flex align='center' gap={selectHoliday ? "1em" : "1em"}>
-									<Button type='primary' size='large' style={{minWidth: "10em"}} onClick={() => router.replace("/admin")}>
-										Перейти в контрольную панель
-									</Button>
+									{user.role === "admin" && (
+										<Button type='primary' size='large' style={{minWidth: "10em"}} onClick={() => router.replace("/admin")}>
+											Перейти в контрольную панель
+										</Button>
+									)}
 									<Button type='primary' size='large' style={{minWidth: "10em"}}>
 										Пройти тест
 									</Button>
@@ -92,7 +94,7 @@ export default function ClientLayout({children, user}) {
 								>
 									<Flex align='center' gap={"1em"}>
 										<div className={classes.profile}>{user?.name}</div>
-										<Avatar size={"large"} className={classes.avatar} icon={<UserOutlined />} />
+										<Avatar size={"large"} style={{backgroundColor: user?.color}} icon={<UserOutlined />} />
 									</Flex>
 								</Dropdown>
 							</Flex>
@@ -145,7 +147,7 @@ export default function ClientLayout({children, user}) {
 				</div>
 				<div className={classes.footer}>
 					<a href='tel:+79999999999'>
-						<div style={{fontFamily: "Inter", fontWeight: 500}}>+7 (999) 999-99-99</div>
+						<div style={{fontFamily: "Inter", fontWeight: 500}}>+7 (906) 328-79-75</div>
 					</a>
 					<Flex align='center' gap={"0.5em"}>
 						<div className={classes.logo}>Orbitalis ©</div>
