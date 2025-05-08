@@ -38,6 +38,17 @@ export async function acceptUser(userId: string) {
 	}
 }
 
+export async function deleteUser(userId: string) {
+	const users = await getColl("users")
+
+	const result = await users.deleteOne({_id: new ObjectId(userId)})
+
+	return {
+		success: result.deletedCount === 1,
+		modifiedCount: result.deletedCount,
+	}
+}
+
 export async function getUsersLeadersList() {
 	const users = await getColl("users")
 

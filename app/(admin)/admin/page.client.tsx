@@ -3,7 +3,7 @@
 import classes from "./page.module.scss"
 import {Avatar, Button, Flex, Form, Modal, notification, Select} from "antd"
 import {FallOutlined, FundOutlined, PieChartOutlined, RiseOutlined, UserOutlined} from "@ant-design/icons"
-import {acceptUser, addLeader, getUsersLeadersList, getUsersWithAccept, getUsersWithoutAccept, removeLeader} from "_api/admin/userAcceptList"
+import {acceptUser, addLeader, deleteUser, getUsersLeadersList, getUsersWithAccept, getUsersWithoutAccept, removeLeader} from "_api/admin/userAcceptList"
 import {useState} from "react"
 
 export default function ClientPage({usersList, initialLeaders, acceptUsers}) {
@@ -60,20 +60,35 @@ export default function ClientPage({usersList, initialLeaders, acceptUsers}) {
 											<div>{new Date(e?.birthdayAt).toLocaleDateString("ru-RU")}</div>
 											<div className={classes.job}>{e?.position}</div>
 										</Flex>
-										<Button
-											type='primary'
-											size='small'
-											className={classes.buttonAccept}
-											onClick={() => {
-												acceptUser(e._id).then((res) => {
-													notification.success({message: "Пользователь принят"})
-													getUsersWithoutAccept().then((users) => setUsers(users))
-													getUsersWithAccept().then((users) => setUsersAccepted(users))
-												})
-											}}
-										>
-											Принять
-										</Button>
+										<Flex gap={"0.5em"}>
+											<Button
+												type='primary'
+												size='small'
+												className={classes.buttonAccept}
+												onClick={() => {
+													acceptUser(e._id).then((res) => {
+														notification.success({message: "Пользователь принят"})
+														getUsersWithoutAccept().then((users) => setUsers(users))
+														getUsersWithAccept().then((users) => setUsersAccepted(users))
+													})
+												}}
+											>
+												Принять
+											</Button>
+											<Button
+												danger
+												size='small'
+												onClick={() => {
+													deleteUser(e._id).then((res) => {
+														notification.success({message: "Пользователь удален"})
+														getUsersWithoutAccept().then((users) => setUsers(users))
+														getUsersWithAccept().then((users) => setUsersAccepted(users))
+													})
+												}}
+											>
+												X
+											</Button>
+										</Flex>
 									</Flex>
 								</Flex>
 							))

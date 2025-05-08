@@ -10,6 +10,7 @@ export interface IUser {
 	username: string
 	name: string
 	role?: string
+	accept?: boolean
 }
 
 export async function getUser(): Promise<IUser | null> {

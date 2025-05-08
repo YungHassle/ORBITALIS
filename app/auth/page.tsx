@@ -1,20 +1,30 @@
 "use client"
 
-import {Button, Flex, Form, Input} from "antd"
-import {getAuth, login} from "_api/auth"
-import {useEffect} from "react"
-import {useRouter} from "next/navigation"
+import {Button, Flex, Form, Input, Modal} from "antd"
+import {login} from "_api/auth"
+import {useRouter, useSearchParams} from "next/navigation"
 import classes from "./page.module.scss"
 import Link from "next/link"
+import {useEffect, useState} from "react"
 
 export default function Page({}) {
+	const searchParams = useSearchParams()
 	const router = useRouter()
 
-	// useEffect(() => {
-	// 	getAuth().then((res) => {
-	// 		router.replace("/")
-	// 	})
-	// }, [])
+	const [isModalOpen, setIsModalOpen] = useState(false)
+
+	useEffect(() => {
+		const waiting = searchParams.get("waiting")
+		setIsModalOpen(waiting === "true")
+	}, [searchParams])
+
+	const removeCreateProjectParam = () => {
+		const params = new URLSearchParams(searchParams)
+
+		params.delete("waiting")
+
+		router.replace(`?${params.toString()}`)
+	}
 
 	return (
 		<div className={classes.root}>
@@ -47,6 +57,17 @@ export default function Page({}) {
 					Авторизоваться
 				</Button>
 			</Form>
+			<Modal
+				open={isModalOpen}
+				onCancel={() => {
+					removeCreateProjectParam()
+					setIsModalOpen(false)
+				}}
+				footer={null}
+			>
+				Дождитесь пока администратор проверит вашу заявку и вы получите доступ к приложению. Если у вас возникли вопросы, пожалуйста, обратитесь к
+				администратору +79213215464
+			</Modal>
 		</div>
 	)
 }

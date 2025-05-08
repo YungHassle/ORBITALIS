@@ -6,11 +6,13 @@ import {usePathname, useRouter} from "next/navigation"
 import {motion} from "framer-motion"
 import {UserOutlined} from "@ant-design/icons"
 import TabWithNavigation from "_components/TabWithNavigation"
-import {Avatar, Button, Dropdown, Flex} from "antd"
+import {Avatar, Button, Dropdown, Flex, Form, Input, Modal} from "antd"
 import BaseIcon from "_components/BaseIcon"
 import logo from "_icons/logo.svg"
 import {useState} from "react"
 import {DatePicker} from "antd"
+import {updateUser} from "_api/user"
+import dayjs from "dayjs"
 
 const {RangePicker} = DatePicker
 
@@ -20,6 +22,7 @@ export default function ClientLayout({children, user}) {
 	const path = usePathname()
 
 	const [selectHoliday, setSelectHoliday] = useState(false)
+	const [profileModal, setProfileModal] = useState(false)
 
 	return (
 		<div className={classes.root} style={{display: "flex", justifyContent: "center"}}>
@@ -43,12 +46,12 @@ export default function ClientLayout({children, user}) {
 									<Button type='primary' size='large' style={{minWidth: "10em"}}>
 										Пройти тест
 									</Button>
-									{!selectHoliday && (
+									{/* {!selectHoliday && (
 										<Button type='primary' size='large' style={{minWidth: "10em"}} onClick={() => setSelectHoliday(true)}>
 											Выбрать отпуск
 										</Button>
-									)}
-									{selectHoliday && (
+									)} */}
+									{/* {selectHoliday && (
 										<Flex align='center' gap={"1em"}>
 											<RangePicker
 												size='large'
@@ -63,16 +66,16 @@ export default function ClientLayout({children, user}) {
 												Отмена
 											</Button>
 										</Flex>
-									)}
+									)} */}
 								</Flex>
 								<Dropdown
 									menu={{
 										items: [
 											{
-												label: "Мой профиль",
+												label: "Редактировать профиль",
 												key: "profile",
 												onClick: () => {
-													router.replace("/profile")
+													setProfileModal(true)
 												},
 											},
 											{
@@ -91,6 +94,48 @@ export default function ClientLayout({children, user}) {
 									</Flex>
 								</Dropdown>
 							</Flex>
+							<Modal title='Редактирование профиля' open={profileModal} onCancel={() => setProfileModal(false)} footer={null}>
+								<Form
+									layout='vertical'
+									className={classes.form}
+									initialValues={{
+										name: user?.name,
+										birthdayAt: user?.birthdayAt ? dayjs(user.birthdayAt) : null,
+										position: user?.position,
+									}}
+									onFinish={async (data) => {
+										try {
+											const res = await updateUser(
+												user._id,
+												data.name,
+												data.birthdayAt ? data.birthdayAt.format("YYYY-MM-DD") : null,
+												data.position,
+											)
+											if (!res.error) {
+												router.refresh()
+												setProfileModal(false)
+											}
+										} catch (error) {
+											console.error("Update failed:", error)
+										}
+									}}
+								>
+									<Flex vertical gap='middle'>
+										<Form.Item label='ФИО' name='name' rules={[{required: true, message: "Пожалуйста, введите ФИО"}]}>
+											<Input />
+										</Form.Item>
+										<Form.Item label='Дата Рождения' name='birthdayAt'>
+											<DatePicker format='YYYY-MM-DD' style={{width: "100%"}} />
+										</Form.Item>
+										<Form.Item label='Должность' name='position'>
+											<Input />
+										</Form.Item>
+										<Button type='primary' htmlType='submit' style={{width: "100%"}}>
+											Сохранить изменения
+										</Button>
+									</Flex>
+								</Form>
+							</Modal>
 						</Flex>
 						<div className={classes.downInner}>
 							<TabWithNavigation
@@ -139,8 +184,8 @@ export default function ClientLayout({children, user}) {
 					</div>
 				</div>
 				<div className={classes.footer}>
-					<a href='tel:+79999999999'>
-						<div style={{fontFamily: "Inter", fontWeight: 500}}>+7 (906) 328-79-75</div>
+					<a href='tel:+79213215464'>
+						<div style={{fontFamily: "Inter", fontWeight: 500}}>+7 (921) 321-54-64</div>
 					</a>
 					<Flex align='center' gap={"0.5em"}>
 						<div className={classes.logo}>Orbitalis ©</div>

@@ -1,20 +1,13 @@
 "use client"
 
 import {Button, DatePicker, Flex, Form, Input} from "antd"
-import {getAuth, register} from "_api/auth"
-import {useEffect} from "react"
+import {register} from "_api/auth"
 import {useRouter} from "next/navigation"
 import classes from "./page.module.scss"
 import Link from "next/link"
 
 export default function Page({}) {
 	const router = useRouter()
-
-	// useEffect(() => {
-	// 	getAuth().then((res) => {
-	// 		router.replace("/")
-	// 	})
-	// }, [])
 
 	return (
 		<div className={classes.root}>
@@ -26,7 +19,7 @@ export default function Page({}) {
 						if (res.error) {
 							return
 						} else {
-							router.replace("/auth")
+							router.replace("/auth?waiting=true")
 						}
 					})
 				}}
