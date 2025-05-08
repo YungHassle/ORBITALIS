@@ -1,7 +1,5 @@
-"use client"
-
 import ClientPage from "./page.client"
 
-export default function Page() {
+export default async function Page() {
 	return <ClientPage />
 }
