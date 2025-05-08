@@ -34,17 +34,13 @@ export default function ClientPage({leaders, newsList}) {
 					footer={null}
 				>
 					<Space direction='vertical' style={{padding: "2em 0 0 0", width: "100%"}}>
-						{modalData?.tags ? (
+						{modalData?.tags && (
 							<Space className={classes.goodTags}>
 								{modalData?.tags.map((e1, i1) => (
 									<Tag key={i1} color={e1 == "Осторожно" ? "red" : e1 == "Внимание" ? "orange" : "green"}>
 										{e1}
 									</Tag>
 								))}
-							</Space>
-						) : (
-							<Space className={classes.goodTags}>
-								<Tag color={"green"}>Новость</Tag>
 							</Space>
 						)}
 						<Space className={classes.tags} align='center'>
@@ -97,17 +93,13 @@ export default function ClientPage({leaders, newsList}) {
 								}}
 							>
 								<Space direction='vertical' style={{padding: "1em", width: "100%"}}>
-									{e.tags ? (
+									{e.tags && (
 										<Space className={classes.goodTags}>
 											{e.tags.map((e1, i1) => (
 												<Tag key={i1} color={e1 == "Осторожно" ? "red" : e1 == "Внимание" ? "orange" : "green"}>
 													{e1}
 												</Tag>
 											))}
-										</Space>
-									) : (
-										<Space className={classes.goodTags}>
-											<Tag color={"green"}>Новость</Tag>
 										</Space>
 									)}
 									<Space className={classes.tags} align='center'>
