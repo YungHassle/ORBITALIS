@@ -1,17 +1,40 @@
 "use client"
 
-import {Avatar, Button, Flex, Form, Input, Modal, Select, Space, Spin, Tooltip} from "antd"
+import {Avatar, Button, Flex, Form, Input, message, Modal, Select, Space, Spin, Tooltip} from "antd"
 import classes from "./page.module.scss"
 import {LoadingOutlined, UserOutlined} from "@ant-design/icons"
 import {getRandomColor} from "_utils/getRandomColor"
 import {useState} from "react"
 import TextArea from "antd/es/input/TextArea"
+import {createTask, deleteTask, getTasks, updateTask} from "_api/admin/tasksList"
 
-export default function ClientPage({}) {
+interface Task {
+	_id: string
+	num: number
+	name: string
+	desc: string
+	username: string
+	userId: string
+	type: string
+	createdAt?: string
+}
+interface User {
+	_id: string
+	name: string
+	color: string
+}
+
+export default function ClientPage({tasksList, usersList}: any) {
+	const [form] = Form.useForm()
+	const [editForm] = Form.useForm()
+	const [messageApi] = message.useMessage()
 	const [loading, setLoading] = useState(false)
-	const [toRightData, setToRightData] = useState<any>(null)
+	const [tasks, setTasks] = useState<Task[]>(tasksList)
+	const [users, setUsers] = useState<User[]>(usersList)
+	const [selectedTask, setSelectedTask] = useState<Task | null>(null)
 	const [createTaskModal, setCreateTaskModal] = useState(false)
 	const [changeTaskModal, setChangeTaskModal] = useState(false)
+	const [toRightData, setToRightData] = useState<any>(null)
 
 	const categories = [
 		{name: "В работе", type: "work"},
@@ -23,112 +46,97 @@ export default function ClientPage({}) {
 		{name: "Создана", type: "created"},
 	]
 
-	const tasks = [
-		{
-			num: 101,
-			name: "Ссылка в поле Описание в карточке задачи не ставится без выделения слова, нет перехода по ссылке",
-			desc: "Ссылка, Ссылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкивставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылки",
-			username: "Артем",
-			type: "work",
-		},
-		{
-			num: 102,
-			name: "iPhone Создание задачи - отклонения от макета",
-			desc: "Поле Описание отличается разером, цветом и набором опций в визивиге, отсутствием надписи на фоне",
-			username: "Оксана",
-			type: "done",
-		},
-		{
-			num: 103,
-			name: "На iPhone при выборе задачи на оплату всплывает меню для текста",
-			desc: "Меню для копирования текста всплывает при длинном клике по любой области. Меню перекрывает задачу, расположенную в строке выше",
-			username: "Андрей",
-			type: "postpone",
-		},
-		{
-			num: 104,
-			name: "Ссылка в поле Описание в карточке задачи не ставится без выделения слова, нет перехода по ссылке",
-			desc: "Ссылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылки",
-			username: "Артем",
-			type: "testing",
-		},
-		{
-			num: 105,
-			name: "iPhone Создание задачи - отклонения от макета",
-			desc: "Поле Описание отличается разером, цветом и набором опций в визивиге, отсутствием надписи на фоне",
-			username: "Оксана",
-			type: "closed",
-		},
-		{
-			num: 106,
-			name: "На iPhone при выборе задачи на оплату всплывает меню для текста",
-			desc: "Меню для копирования текста всплывает при длинном клике по любой области. Меню перекрывает задачу, расположенную в строке выше",
-			username: "Андрей",
-			type: "canceled",
-		},
-		{
-			num: 107,
-			name: "Ссылка в поле Описание в карточке задачи не ставится без выделения слова, нет перехода по ссылке",
-			desc: "Ссылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылки",
-			username: "Артем",
-			type: "created",
-		},
-		{
-			num: 108,
-			name: "iPhone Создание задачи - отклонения от макета",
-			desc: "Поле Описание отличается разером, цветом и набором опций в визивиге, отсутствием надписи на фоне",
-			username: "Оксана",
-			type: "created",
-		},
-		{
-			num: 109,
-			name: "На iPhone при выборе задачи на оплату всплывает меню для текста",
-			desc: "Меню для копирования текста всплывает при длинном клике по любой области. Меню перекрывает задачу, расположенную в строке выше",
-			username: "Андрей",
-			type: "created",
-		},
-		{
-			num: 109,
-			name: "На iPhone при выборе задачи на оплату всплывает меню для текста",
-			desc: "Меню для копирования текста всплывает при длинном клике по любой области. Меню перекрывает задачу, расположенную в строке выше",
-			username: "Андрей",
-			type: "created",
-		},
-		{
-			num: 109,
-			name: "На iPhone при выборе задачи на оплату всплывает меню для текста",
-			desc: "Меню для копирования текста всплывает при длинном клике по любой области. Меню перекрывает задачу, расположенную в строке выше",
-			username: "Андрей",
-			type: "created",
-		},
-		{
-			num: 109,
-			name: "На iPhone при выборе задачи на оплату всплывает меню для текста",
-			desc: "Меню для копирования текста всплывает при длинном клике по любой области. Меню перекрывает задачу, расположенную в строке выше",
-			username: "Андрей",
-			type: "created",
-		},
-	]
+	const handleCreate = async (values: any) => {
+		try {
+			const result = await createTask({
+				...values,
+				userId: values.userId,
+			})
 
-	const users = [
-		{name: "Оксана", _id: 1},
-		{name: "Андрей", _id: 2},
-		{name: "Артем", _id: 3},
-	]
+			if (result.success) {
+				messageApi.success(`Задача ORB_${result.taskNum} успешно создана!`)
+				setCreateTaskModal(false)
+				form.resetFields()
+				const updatedTasks = await getTasks()
+				setTasks(updatedTasks as any)
+			}
+		} catch (error) {
+			messageApi.error("Произошла ошибка: " + (error instanceof Error ? error.message : "Unknown error"))
+		}
+	}
+
+	const handleUpdate = async (values: any) => {
+		if (!selectedTask) return
+
+		try {
+			const result = await updateTask(selectedTask._id, {
+				...values,
+				userId: values.userId,
+			})
+
+			if (result.success) {
+				messageApi.success("Задача успешно обновлена!")
+				setChangeTaskModal(false)
+				editForm.resetFields()
+				const updatedTasks = await getTasks()
+				setTasks(updatedTasks as any)
+				const updatedTask = updatedTasks.find((t) => t._id === selectedTask._id)
+				if (updatedTask) setSelectedTask(updatedTask as any)
+			}
+		} catch (error) {
+			messageApi.error("Произошла ошибка: " + (error instanceof Error ? error.message : "Unknown error"))
+		}
+	}
+
+	const handleDelete = async () => {
+		if (!selectedTask) return
+
+		try {
+			const result = await deleteTask(selectedTask._id)
+			if (result.success) {
+				setToRightData(null)
+				setChangeTaskModal(false)
+				messageApi.success("Задача удалена")
+				setSelectedTask(null)
+				const updatedTasks = await getTasks()
+				setTasks(updatedTasks as any)
+			} else {
+				messageApi.error(result.error || "Ошибка удаления")
+			}
+		} catch (error) {
+			messageApi.error("Ошибка при удалении")
+		}
+	}
+
+	const handleTaskSelect = (task: Task) => {
+		setToRightData(task)
+		setLoading(true)
+		setSelectedTask(task)
+		setTimeout(() => setLoading(false), 500)
+	}
+
+	const handleStatusChange = async (value: string) => {
+		if (!selectedTask) return
+
+		try {
+			const result = await updateTask(selectedTask._id, {type: value})
+			if (result.success) {
+				messageApi.success("Статус задачи обновлен")
+				const updatedTasks = await getTasks()
+				setTasks(updatedTasks as any)
+				const updatedTask = updatedTasks.find((t) => t._id === selectedTask._id)
+				if (updatedTask) setSelectedTask(updatedTask as any)
+			}
+		} catch (error) {
+			messageApi.error("Ошибка при обновлении статуса")
+		}
+	}
 
 	return (
 		<div className={classes.root}>
 			<Space direction='vertical' className={classes.blockLeft}>
 				{tasks.map((e, i) => (
-					<Space
-						key={i}
-						className={classes.taskBlock}
-						onClick={() => {
-							setToRightData(e)
-							setLoading(true)
-							setTimeout(() => setLoading(false), 750)
-						}}
-					>
+					<Space key={i} className={classes.taskBlock} onClick={() => handleTaskSelect(e)}>
 						<Flex gap={"1em"}>
 							<div className={classes.num}>ORB_{e.num}</div>
 							<div>{e.name}</div>
@@ -157,15 +165,23 @@ export default function ClientPage({}) {
 					}}
 					footer={null}
 				>
-					<Form layout='vertical' onFinish={async (data) => {}}>
-						<Form.Item label='Название' name='username' rules={[{required: true}]}>
+					<Form form={form} layout='vertical' onFinish={handleCreate}>
+						<Form.Item label='Название' name='name' rules={[{required: true}]}>
 							<Input />
 						</Form.Item>
-						<Form.Item label='Описание' name='username' rules={[{required: true}]}>
-							<TextArea />
+						<Form.Item label='Описание' name='desc' rules={[{required: true}]}>
+							<TextArea rows={4} />
 						</Form.Item>
-						<Form.Item label='Назначить на' name='username' rules={[{required: true}]}>
-							<Select options={users.map((e) => ({label: e.name, value: e._id}))} />
+						<Form.Item label='Назначить на' name='userId' rules={[{required: true}]}>
+							<Select
+								options={users.map((user) => ({label: user.name, value: user._id}))}
+								showSearch
+								optionFilterProp='label'
+								placeholder='Выберите пользователя'
+							/>
+						</Form.Item>
+						<Form.Item label='Статус' name='type' initialValue='created'>
+							<Select options={categories.map((cat) => ({label: cat.name, value: cat.type}))} />
 						</Form.Item>
 						<Button type='primary' htmlType='submit' style={{width: "100%"}}>
 							Создать
@@ -192,8 +208,9 @@ export default function ClientPage({}) {
 								<div>ORB_{toRightData?.num}</div>
 								<Select
 									className={classes.select}
-									value={toRightData?.type}
-									options={categories?.map((e, i) => ({label: e.name, value: e.type}))}
+									value={selectedTask?.type}
+									options={categories.map((cat) => ({label: cat.name, value: cat.type}))}
+									onChange={handleStatusChange}
 								/>
 							</Flex>
 							<div className={classes.name}>{toRightData?.name}</div>
@@ -208,19 +225,37 @@ export default function ClientPage({}) {
 						}}
 						footer={null}
 					>
-						<Form layout='vertical' onFinish={async (data) => {}}>
-							<Form.Item label='Название' name='username' rules={[{required: true}]}>
+						<Form
+							form={editForm}
+							layout='vertical'
+							initialValues={{
+								name: selectedTask?.name,
+								desc: selectedTask?.desc,
+								userId: selectedTask?.userId,
+								type: selectedTask?.type,
+							}}
+							onFinish={handleUpdate}
+						>
+							<Form.Item label='Название' name='name' rules={[{required: true}]}>
 								<Input />
 							</Form.Item>
-							<Form.Item label='Описание' name='username' rules={[{required: true}]}>
-								<TextArea />
+							<Form.Item label='Описание' name='desc' rules={[{required: true}]}>
+								<TextArea rows={4} />
 							</Form.Item>
-							<Form.Item label='Назначить на' name='username' rules={[{required: true}]}>
-								<Select options={users.map((e) => ({label: e.name, value: e._id}))} />
+							<Form.Item label='Назначить на' name='userId' rules={[{required: true}]}>
+								<Select options={users.map((e) => ({label: e.name, value: e._id}))} showSearch optionFilterProp='label' />
 							</Form.Item>
-							<Button type='primary' htmlType='submit' style={{width: "100%"}}>
-								Изменить
-							</Button>
+							<Form.Item label='Статус' name='type'>
+								<Select options={categories.map((e) => ({label: e.name, value: e.type}))} />
+							</Form.Item>
+							<Flex vertical gap={"1em"}>
+								<Button type='primary' htmlType='submit' style={{width: "100%"}}>
+									Сохранить изменения
+								</Button>
+								<Button danger className={classes.button} onClick={handleDelete} style={{width: "100%"}}>
+									Удалить
+								</Button>
+							</Flex>
 						</Form>
 					</Modal>
 				</Space>
