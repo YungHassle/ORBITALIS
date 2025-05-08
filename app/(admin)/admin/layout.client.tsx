@@ -47,13 +47,6 @@ export default function ClientLayout({children, user}) {
 												},
 											},
 											{
-												label: "Настройки",
-												key: "settings",
-												onClick: () => {
-													router.replace("/settings")
-												},
-											},
-											{
 												label: "Выход",
 												key: "auth",
 												onClick: () => {
@@ -65,7 +58,7 @@ export default function ClientLayout({children, user}) {
 								>
 									<Flex align='center' gap={"1em"}>
 										<div className={classes.profile}>{user?.name}</div>
-										<Avatar size={"large"} style={{backgroundColor: user?.color}} icon={<UserOutlined />} />
+										<Avatar size={"large"} style={{backgroundColor: user?.color, minWidth: "40px"}} icon={<UserOutlined />} />
 									</Flex>
 								</Dropdown>
 							</Flex>

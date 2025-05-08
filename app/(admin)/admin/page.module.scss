@@ -26,7 +26,8 @@
 		align-items: flex-start;
 		display: flex;
 		gap: 1em;
-		width: 14.5em;
+		width: 100%;
+		max-width: 14.5em;
 		.name {
 			font-size: 1.1em;
 		}
@@ -94,8 +95,7 @@
 	font-size: 0.9em;
 }
 .helloGuestsBlock {
-	gap: 2em;
-	padding: 2em;
+	padding: 1em;
 
 	box-shadow: var(--rui_shadow);
 	width: 100%;
@@ -112,7 +112,8 @@
 }
 .blockForAccept {
 	gap: 1em;
-	width: 19.3em;
+	width: 100%;
+	max-width: 20em;
 	.name {
 		font-size: 1.1em;
 	}

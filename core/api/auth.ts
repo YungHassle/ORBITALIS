@@ -65,7 +65,7 @@ export async function login(username: string, password: string) {
 	}
 }
 
-export async function register(username: string, password: string, name: string) {
+export async function register(username: string, password: string, name: string, birthdayAt: string, position: string) {
 	const users = await getColl("users")
 
 	// Проверяем, существует ли пользователь с таким же username
@@ -87,6 +87,8 @@ export async function register(username: string, password: string, name: string)
 		name,
 		createdAt: new Date(),
 		color: getRandomColor(),
+		birthdayAt: new Date(birthdayAt),
+		position,
 	}
 
 	// Сохраняем пользователя в базе данных

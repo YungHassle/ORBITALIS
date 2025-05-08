@@ -39,7 +39,7 @@ export default function Page({}) {
 					<Form.Item label='Логин' name='username' rules={[{required: true}]}>
 						<Input />
 					</Form.Item>
-					<Form.Item label='Пароль' name='password' rules={[{required: true, message: "Please input your password!"}]}>
+					<Form.Item label='Пароль' name='password' rules={[{required: true}]}>
 						<Input type='password' />
 					</Form.Item>
 				</Flex>

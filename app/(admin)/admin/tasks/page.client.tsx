@@ -142,7 +142,7 @@ export default function ClientPage({tasksList, usersList}: any) {
 							<div>{e.name}</div>
 						</Flex>
 						<Tooltip title={e.username} placement='bottom'>
-							<Avatar size={"default"} style={{backgroundColor: getRandomColor()}} icon={<UserOutlined />} />
+							<Avatar size={"default"} style={{backgroundColor: getRandomColor(), minWidth: "40px"}} icon={<UserOutlined />} />
 						</Tooltip>
 					</Space>
 				))}

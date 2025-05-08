@@ -1,6 +1,6 @@
 "use client"
 
-import {Button, Flex, Form, Input} from "antd"
+import {Button, DatePicker, Flex, Form, Input} from "antd"
 import {getAuth, register} from "_api/auth"
 import {useEffect} from "react"
 import {useRouter} from "next/navigation"
@@ -22,7 +22,7 @@ export default function Page({}) {
 				layout='vertical'
 				className={classes.form}
 				onFinish={async (data) => {
-					register(data.username, data.password, data.name).then((res) => {
+					register(data.username, data.password, data.name, data.birthdayAt, data.position).then((res) => {
 						if (res.error) {
 							return
 						} else {
@@ -36,13 +36,19 @@ export default function Page({}) {
 				</Flex>
 				<div className={classes.headline}>Регистрация</div>
 				<Flex vertical>
-					<Form.Item label='Логин' name='username' rules={[{required: true, message: "Please input your username!"}]}>
+					<Form.Item label='Логин' name='username' rules={[{required: true}]}>
 						<Input />
 					</Form.Item>
-					<Form.Item label='Пароль' name='password' rules={[{required: true, message: "Please input your password!"}]}>
+					<Form.Item label='Пароль' name='password' rules={[{required: true}]}>
 						<Input type='password' />
 					</Form.Item>
-					<Form.Item label='ФИО' name='name' rules={[{required: true, message: "Please input your name!"}]}>
+					<Form.Item label='ФИО' name='name' rules={[{required: true}]}>
+						<Input />
+					</Form.Item>
+					<Form.Item label='Дата Рождения' name='birthdayAt' rules={[{required: true}]}>
+						<DatePicker format='YYYY-MM-DD' style={{width: "100%"}} />
+					</Form.Item>
+					<Form.Item label='Должность' name='position' rules={[{required: true}]}>
 						<Input />
 					</Form.Item>
 				</Flex>
