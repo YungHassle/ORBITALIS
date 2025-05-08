@@ -24,7 +24,7 @@ export default function ClientLayout({children, user}) {
 				<div className={classes.upAndMid}>
 					<div className={classes.upper}>
 						<Flex align='center' gap={"1em"} className={classes.upInner}>
-							<Link href='/'>
+							<Link href='/admin'>
 								<Flex align='center' gap={"0.5em"}>
 									<BaseIcon svg={logo} style={{fontSize: "1.5em"}} />
 									<div className={classes.logo}>Orbitalis — ADMIN</div>

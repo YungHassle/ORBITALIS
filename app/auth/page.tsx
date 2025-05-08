@@ -5,6 +5,7 @@ import {getAuth, login} from "_api/auth"
 import {useEffect} from "react"
 import {useRouter} from "next/navigation"
 import classes from "./page.module.scss"
+import Link from "next/link"
 
 export default function Page({}) {
 	const router = useRouter()
@@ -30,6 +31,9 @@ export default function Page({}) {
 					})
 				}}
 			>
+				<Flex justify='flex-end' align='center'>
+					<Link href='/registration'>Зарегистрироваться</Link>
+				</Flex>
 				<div className={classes.headline}>Авторизация</div>
 				<Flex vertical>
 					<Form.Item label='Логин' name='username' rules={[{required: true}]}>

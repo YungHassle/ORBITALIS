@@ -35,7 +35,7 @@ export default function ClientLayout({children, user}) {
 							</Link>
 							<Flex align='center' gap={"3em"}>
 								<Flex align='center' gap={selectHoliday ? "1em" : "1em"}>
-									{user.role === "admin" && (
+									{user?.role === "admin" && (
 										<Button type='primary' size='large' style={{minWidth: "10em"}} onClick={() => router.replace("/admin")}>
 											Перейти в контрольную панель
 										</Button>
