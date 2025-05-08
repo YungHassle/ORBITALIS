@@ -27,7 +27,7 @@
 		overflow-y: auto;
 		max-height: 40.5em;
 		gap: 1em;
-		width: 34%;
+		width: 100%;
 
 		.block {
 			min-height: 38.5em;
@@ -48,4 +48,7 @@
 }
 .select {
 	min-width: 16em;
+}
+.button {
+	width: 15em;
 }

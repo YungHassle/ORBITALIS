@@ -95,6 +95,26 @@ export async function getTasks() {
 	}
 }
 
+export async function getTasksById(_id: string) {
+	try {
+		const tasks = await getColl("tasks")
+		const taskList = await tasks
+			.find({userId: new ObjectId(_id)})
+			.sort({num: -1})
+			.toArray()
+
+		return taskList.map((task) => ({
+			...task,
+			_id: task._id.toString(),
+			createdAt: task.createdAt?.toISOString(),
+			updatedAt: task.updatedAt?.toISOString(),
+		}))
+	} catch (error) {
+		console.error("Error fetching tasks:", error)
+		return []
+	}
+}
+
 export async function deleteTask(taskId: string) {
 	try {
 		const tasks = await getColl("tasks")
@@ -112,16 +132,14 @@ export async function deleteTask(taskId: string) {
 	}
 }
 
-export async function getUsers() {
-	try {
-		const users = await getColl("users")
-		const userList = await users.find().toArray()
-		return userList.map((user) => ({
-			...user,
-			_id: user._id,
-		}))
-	} catch (error) {
-		console.error("Error fetching users:", error)
-		return []
-	}
+export async function getUsersForTasks() {
+	const users = await getColl("users")
+
+	const usersWithoutAccept = await users
+		.find({
+			$or: [{accept: {$exists: true}}],
+		})
+		.toArray()
+
+	return usersWithoutAccept
 }

@@ -1,14 +1,42 @@
 "use client"
 
-import {Avatar, Flex, Select, Space, Spin, Tooltip} from "antd"
+import {Avatar, Flex, Form, message, Select, Space, Spin, Tooltip} from "antd"
 import classes from "./page.module.scss"
 import {LoadingOutlined, UserOutlined} from "@ant-design/icons"
-import {getRandomColor} from "_utils/getRandomColor"
-import {useState} from "react"
+import {useEffect, useState} from "react"
+import {getTasksById, updateTask} from "_api/admin/tasksList"
 
-export default function ClientPage({}) {
+interface Task {
+	_id: string
+	num: number
+	name: string
+	desc: string
+	username: string
+	userId: string
+	type: string
+	createdAt?: string
+}
+interface User {
+	_id: string
+	name: string
+	color: string
+}
+
+export default function ClientPage({tasksList, usersList, userId}: any) {
+	const [form] = Form.useForm()
+	const [editForm] = Form.useForm()
+	const [messageApi] = message.useMessage()
 	const [loading, setLoading] = useState(false)
+	const [tasks, setTasks] = useState<Task[]>(tasksList)
+	const [users, setUsers] = useState<User[]>(usersList)
+	const [selectedTask, setSelectedTask] = useState<Task | null>(null)
+	const [changeTaskModal, setChangeTaskModal] = useState(false)
 	const [toRightData, setToRightData] = useState<any>(null)
+
+	const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasksList)
+	const [nameFilter, setNameFilter] = useState("")
+	const [userFilter, setUserFilter] = useState(null)
+	const [statusFilter, setStatusFilter] = useState(null)
 
 	const categories = [
 		{name: "В работе", type: "work"},
@@ -20,142 +48,122 @@ export default function ClientPage({}) {
 		{name: "Создана", type: "created"},
 	]
 
-	const tasks = [
-		{
-			num: 101,
-			name: "Ссылка в поле Описание в карточке задачи не ставится без выделения слова, нет перехода по ссылке",
-			desc: "Ссылка, Ссылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкивставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылкиСсылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылки",
-			username: "Артем",
-			type: "work",
-		},
-		{
-			num: 102,
-			name: "iPhone Создание задачи - отклонения от макета",
-			desc: "Поле Описание отличается разером, цветом и набором опций в визивиге, отсутствием надписи на фоне",
-			username: "Оксана",
-			type: "done",
-		},
-		{
-			num: 103,
-			name: "На iPhone при выборе задачи на оплату всплывает меню для текста",
-			desc: "Меню для копирования текста всплывает при длинном клике по любой области. Меню перекрывает задачу, расположенную в строке выше",
-			username: "Андрей",
-			type: "postpone",
-		},
-		{
-			num: 104,
-			name: "Ссылка в поле Описание в карточке задачи не ставится без выделения слова, нет перехода по ссылке",
-			desc: "Ссылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылки",
-			username: "Артем",
-			type: "testing",
-		},
-		{
-			num: 105,
-			name: "iPhone Создание задачи - отклонения от макета",
-			desc: "Поле Описание отличается разером, цветом и набором опций в визивиге, отсутствием надписи на фоне",
-			username: "Оксана",
-			type: "closed",
-		},
-		{
-			num: 106,
-			name: "На iPhone при выборе задачи на оплату всплывает меню для текста",
-			desc: "Меню для копирования текста всплывает при длинном клике по любой области. Меню перекрывает задачу, расположенную в строке выше",
-			username: "Андрей",
-			type: "canceled",
-		},
-		{
-			num: 107,
-			name: "Ссылка в поле Описание в карточке задачи не ставится без выделения слова, нет перехода по ссылке",
-			desc: "Ссылка, вставленная в текст, не распознается как ссылка, без принудительного привязывания ссылки",
-			username: "Артем",
-			type: "created",
-		},
-		{
-			num: 108,
-			name: "iPhone Создание задачи - отклонения от макета",
-			desc: "Поле Описание отличается разером, цветом и набором опций в визивиге, отсутствием надписи на фоне",
-			username: "Оксана",
-			type: "created",
-		},
-		{
-			num: 109,
-			name: "На iPhone при выборе задачи на оплату всплывает меню для текста",
-			desc: "Меню для копирования текста всплывает при длинном клике по любой области. Меню перекрывает задачу, расположенную в строке выше",
-			username: "Андрей",
-			type: "created",
-		},
-		{
-			num: 109,
-			name: "На iPhone при выборе задачи на оплату всплывает меню для текста",
-			desc: "Меню для копирования текста всплывает при длинном клике по любой области. Меню перекрывает задачу, расположенную в строке выше",
-			username: "Андрей",
-			type: "created",
-		},
-		{
-			num: 109,
-			name: "На iPhone при выборе задачи на оплату всплывает меню для текста",
-			desc: "Меню для копирования текста всплывает при длинном клике по любой области. Меню перекрывает задачу, расположенную в строке выше",
-			username: "Андрей",
-			type: "created",
-		},
-		{
-			num: 109,
-			name: "На iPhone при выборе задачи на оплату всплывает меню для текста",
-			desc: "Меню для копирования текста всплывает при длинном клике по любой области. Меню перекрывает задачу, расположенную в строке выше",
-			username: "Андрей",
-			type: "created",
-		},
-	]
+	useEffect(() => {
+		let result = [...tasks]
+
+		if (nameFilter) {
+			result = result.filter((task) => task.name.toLowerCase().includes(nameFilter.toLowerCase()))
+		}
+
+		if (userFilter) {
+			result = result.filter((task) => task.userId === userFilter)
+		}
+
+		if (statusFilter) {
+			result = result.filter((task) => task.type === statusFilter)
+		}
+
+		setFilteredTasks(result)
+	}, [tasks, nameFilter, userFilter, statusFilter])
+
+	const handleTaskSelect = (task: Task) => {
+		setLoading(true)
+		setSelectedTask(task)
+		setToRightData(task)
+		editForm.resetFields()
+		setTimeout(() => setLoading(false), 1000)
+	}
+
+	useEffect(() => {
+		if (changeTaskModal && selectedTask) {
+			editForm.setFieldsValue({
+				name: selectedTask.name,
+				desc: selectedTask.desc,
+				userId: selectedTask.userId,
+				type: selectedTask.type,
+			})
+		}
+	}, [changeTaskModal, selectedTask, editForm])
+
+	const handleStatusChange = async (value: string) => {
+		if (!selectedTask) return
+
+		try {
+			const result = await updateTask(selectedTask._id, {type: value})
+			if (result.success) {
+				messageApi.success("Статус задачи обновлен")
+				const updatedTasks = await getTasksById(userId)
+				setTasks(updatedTasks as any)
+				const updatedTask = updatedTasks.find((t) => t._id === selectedTask._id)
+				if (updatedTask) setSelectedTask(updatedTask as any)
+			}
+		} catch (error) {
+			messageApi.error("Ошибка при обновлении статуса")
+		}
+	}
 
 	return (
 		<div className={classes.root}>
 			<Space direction='vertical' className={classes.blockLeft}>
-				{tasks.map((e, i) => (
-					<Space
-						key={i}
-						className={classes.taskBlock}
-						onClick={() => {
-							setToRightData(e)
-							setLoading(true)
-							setTimeout(() => setLoading(false), 750)
-						}}
-					>
-						<Flex gap={"1em"}>
-							<div className={classes.num}>ORB_{e.num}</div>
-							<div>{e.name}</div>
-						</Flex>
-						<Tooltip title={e.username} placement='bottom'>
-							<Avatar size={"default"} style={{backgroundColor: getRandomColor(), minWidth: "40px"}} icon={<UserOutlined />} />
-						</Tooltip>
-					</Space>
-				))}
-			</Space>
-			<Space direction='vertical' className={classes.blockRight}>
-				{!loading && toRightData == null && (
-					<Space className={classes.block} direction='vertical' size={20} style={{justifyContent: "center", alignItems: "center"}}>
-						<div style={{fontSize: "1.35em"}}>Добро пожаловать в раздел задачи!</div>
-					</Space>
-				)}
-				{loading && (
-					<Space style={{width: "100%", height: "38em", justifyContent: "center", alignItems: "center"}}>
-						<Spin indicator={<LoadingOutlined style={{fontSize: 100}} spin />} />
-					</Space>
-				)}
-				{!loading && toRightData && (
-					<Space className={classes.block} direction='vertical' size={20}>
-						<Flex justify='space-between' align='center'>
-							<div>ORB_{toRightData?.num}</div>
-							<Select
-								className={classes.select}
-								value={toRightData?.type}
-								options={categories?.map((e, i) => ({label: e.name, value: e.type}))}
-							/>
-						</Flex>
-						<div className={classes.name}>{toRightData?.name}</div>
-						<div className={classes.desc}>{toRightData?.desc}</div>
-					</Space>
+				{filteredTasks.length === 0 ? (
+					<div>Задачи не найдены</div>
+				) : (
+					filteredTasks.map((e, i) => (
+						<Space
+							align='start'
+							key={i}
+							className={classes.taskBlock}
+							onClick={() => {
+								handleTaskSelect(e)
+							}}
+						>
+							<Flex gap={"1em"}>
+								<div className={classes.num}>ORB_{e.num}</div>
+								<div>{e.name}</div>
+							</Flex>
+							<Flex align='center' gap={"1em"}>
+								<div style={{color: "grey"}}>{categories.find((c) => c.type === e.type)?.name}</div>
+								<Tooltip title={usersList.find((u) => u._id === e.userId)?.name} placement='bottom'>
+									<Avatar
+										size={"default"}
+										style={{backgroundColor: usersList.find((u) => u._id === e.userId)?.color, minWidth: "32px"}}
+										icon={<UserOutlined />}
+									/>
+								</Tooltip>
+							</Flex>
+						</Space>
+					))
 				)}
 			</Space>
+			<Flex vertical style={{width: "34%"}} gap={"1em"}>
+				<Space direction='vertical' className={classes.blockRight}>
+					{!loading && toRightData == null && (
+						<Space className={classes.block} direction='vertical' size={20} style={{justifyContent: "center", alignItems: "center"}}>
+							<div style={{fontSize: "1.35em"}}>Выберите задачу или создайте новую</div>
+						</Space>
+					)}
+					{loading && (
+						<Space style={{width: "100%", height: "36em", justifyContent: "center", alignItems: "center"}}>
+							<Spin indicator={<LoadingOutlined style={{fontSize: 100}} spin />} />
+						</Space>
+					)}
+					{!loading && toRightData && (
+						<Space className={classes.block} direction='vertical' size={20}>
+							<Flex justify='space-between' align='center'>
+								<div>ORB_{toRightData?.num}</div>
+								<Select
+									className={classes.select}
+									value={selectedTask?.type}
+									options={categories.map((cat) => ({label: cat.name, value: cat.type}))}
+									onChange={handleStatusChange}
+								/>
+							</Flex>
+							<div className={classes.name}>{toRightData?.name}</div>
+							<div className={classes.desc}>{toRightData?.desc}</div>
+						</Space>
+					)}
+				</Space>
+			</Flex>
 		</div>
 	)
 }
