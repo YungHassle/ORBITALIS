@@ -1,49 +1,54 @@
 .root {
 	display: flex;
-	flex-direction: column;
 	gap: 1em;
-	.button {
-		align-self: flex-end;
-		width: 16em;
-	}
-	.list {
-		display: flex;
+	.blockLeft {
+		padding: 1em;
+		overflow-y: auto;
+		max-height: 37em;
 		gap: 1em;
-		flex-wrap: wrap;
-	}
-	.goodTags {
-		flex-wrap: wrap;
 		width: 100%;
-		justify-content: flex-end;
 	}
-	.newCard {
-		box-shadow: var(--rui_shadow);
-		width: 32.65em;
-		background-color: var(--rui_white);
-		border-radius: var(--rui_defaultBorder);
-	}
-	.tags {
+	.taskBlock {
+		cursor: pointer;
 		justify-content: space-between;
 		width: 100%;
-		font-size: 0.8em;
-		color: #a8a8a8;
-	}
-	.banner {
-		width: 100%;
-		img {
-			border-radius: 1em;
-			width: 100%;
+		gap: 2em;
+		padding: 1em 2em;
+		min-height: 4em;
+		box-shadow: var(--rui_shadow);
+		background-color: var(--rui_white) !important;
+		border-radius: var(--rui_defaultBorder);
+		.num {
+			font-weight: 500;
 		}
 	}
-	.headline {
-		color: #0c0c0c;
-		font-size: 1.5em;
+	.blockRight {
+		padding: 1em;
+		overflow-y: auto;
+		max-height: 38em;
+		gap: 1em;
+		width: 100%;
+
+		.block {
+			min-height: 36em;
+			width: 100%;
+			gap: 2em;
+			padding: 1em;
+			box-shadow: var(--rui_shadow);
+			background-color: var(--rui_white) !important;
+			border-radius: var(--rui_defaultBorder);
+			.name {
+				font-size: 1.35em;
+			}
+			.desc {
+				font-size: 0.9em;
+			}
+		}
 	}
-	.subheadline {
-		font-size: 1.1em;
+	.select {
+		min-width: 16em;
 	}
-	.descForText {
-		margin-left: 1.5em;
-		font-size: 0.9em;
+	.button {
+		width: 15em;
 	}
 }

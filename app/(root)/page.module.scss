@@ -50,65 +50,65 @@
 		object-fit: cover;
 		aspect-ratio: 4/3;
 	}
-}
-.goodTags {
-	flex-wrap: wrap;
-	width: 100%;
-	justify-content: flex-end;
-}
-.card {
-	min-height: 22em;
-	max-height: 22em;
-	width: 32.65em;
-	padding: 1em;
-}
-.newCard {
-	min-height: 20em;
-	max-height: 20em;
-	box-shadow: var(--rui_shadow);
-	width: 100%;
-	background-color: var(--rui_white) !important;
-	border-radius: var(--rui_defaultBorder);
-}
-.tags {
-	justify-content: space-between;
-	width: 100%;
-	font-size: 0.8em;
-	color: #a8a8a8;
-}
-.banner {
-	width: 100%;
-	img {
-		border-radius: 1em;
+	.goodTags {
+		flex-wrap: wrap;
 		width: 100%;
+		justify-content: flex-end;
 	}
-}
-.headline {
-	color: #0c0c0c;
-	font-size: 1.5em;
-}
-.subheadline {
-	font-size: 1.1em;
-}
-.descForText {
-	margin-left: 1.5em;
-	font-size: 0.9em;
-}
-.helloGuestsBlock {
-	gap: 2em;
-	padding: 2em;
-	min-height: 49em;
-	box-shadow: var(--rui_shadow);
-	width: 100%;
-	background-color: var(--rui_white) !important;
-	border-radius: var(--rui_defaultBorder);
-	.headlineText {
-		font-size: 1.3em;
+	.card {
+		min-height: 22em;
+		max-height: 22em;
+		width: 32.65em;
+		padding: 1em;
 	}
-	.imgLogo {
-		max-width: 100%;
-		max-height: 100%;
+	.newCard {
+		min-height: 20em;
+		max-height: 20em;
+		box-shadow: var(--rui_shadow);
+		width: 100%;
+		background-color: var(--rui_white) !important;
 		border-radius: var(--rui_defaultBorder);
+	}
+	.tags {
+		justify-content: space-between;
+		width: 100%;
+		font-size: 0.8em;
+		color: #a8a8a8;
+	}
+	.banner {
+		width: 100%;
+		img {
+			border-radius: 1em;
+			width: 100%;
+		}
+	}
+	.headline {
+		color: #0c0c0c;
+		font-size: 1.5em;
+	}
+	.subheadline {
+		font-size: 1.1em;
+	}
+	.descForText {
+		margin-left: 1.5em;
+		font-size: 0.9em;
+	}
+	.helloGuestsBlock {
+		gap: 2em;
+		padding: 2em;
+		min-height: 49em;
+		box-shadow: var(--rui_shadow);
+		width: 100%;
+		background-color: var(--rui_white) !important;
+		border-radius: var(--rui_defaultBorder);
+		.headlineText {
+			font-size: 1.3em;
+		}
+		.imgLogo {
+			max-width: 100%;
+			max-height: 100%;
+			border-radius: var(--rui_defaultBorder);
+		}
 	}
 }
 
@@ -165,67 +165,67 @@
 		object-fit: cover;
 		aspect-ratio: 4/3;
 	}
-}
-.goodTags {
-	flex-wrap: wrap;
-	width: 100%;
-	justify-content: flex-end;
-}
-.card {
-	min-height: 22em;
-	max-height: 22em;
-	width: 32.65em;
-	padding: 1em;
-}
-.newCard {
-	min-height: 20em;
-	max-height: 20em;
-	box-shadow: var(--rui_shadow);
-	width: 100%;
-	background-color: var(--rui_white) !important;
-	border-radius: var(--rui_defaultBorder);
-}
-.tags {
-	align-items: flex-start;
-	flex-direction: column;
-	justify-content: space-between;
-	width: 100%;
-	font-size: 0.8em;
-	color: #a8a8a8;
-}
-.banner {
-	width: 100%;
-	img {
-		border-radius: 1em;
+	.goodTags {
+		flex-wrap: wrap;
 		width: 100%;
+		justify-content: flex-end;
 	}
-}
-.headline {
-	color: #0c0c0c;
-	font-size: 1.5em;
-}
-.subheadline {
-	font-size: 1.1em;
-}
-.descForText {
-	margin-left: 1.5em;
-	font-size: 0.9em;
-}
-
-.helloGuestsBlock {
-	gap: 2em;
-	padding: 2em;
-	min-height: 49em;
-	box-shadow: var(--rui_shadow);
-	width: 100%;
-	background-color: var(--rui_white) !important;
-	border-radius: var(--rui_defaultBorder);
-	.headlineText {
-		font-size: 1.3em;
+	.card {
+		min-height: 22em;
+		max-height: 22em;
+		width: 32.65em;
+		padding: 1em;
 	}
-	.imgLogo {
-		max-width: 100%;
-		max-height: 100%;
+	.newCard {
+		min-height: 20em;
+		max-height: 20em;
+		box-shadow: var(--rui_shadow);
+		width: 100%;
+		background-color: var(--rui_white) !important;
 		border-radius: var(--rui_defaultBorder);
+	}
+	.tags {
+		align-items: flex-start;
+		flex-direction: column;
+		justify-content: space-between;
+		width: 100%;
+		font-size: 0.8em;
+		color: #a8a8a8;
+	}
+	.banner {
+		width: 100%;
+		img {
+			border-radius: 1em;
+			width: 100%;
+		}
+	}
+	.headline {
+		color: #0c0c0c;
+		font-size: 1.5em;
+	}
+	.subheadline {
+		font-size: 1.1em;
+	}
+	.descForText {
+		margin-left: 1.5em;
+		font-size: 0.9em;
+	}
+
+	.helloGuestsBlock {
+		gap: 2em;
+		padding: 2em;
+		min-height: 49em;
+		box-shadow: var(--rui_shadow);
+		width: 100%;
+		background-color: var(--rui_white) !important;
+		border-radius: var(--rui_defaultBorder);
+		.headlineText {
+			font-size: 1.3em;
+		}
+		.imgLogo {
+			max-width: 100%;
+			max-height: 100%;
+			border-radius: var(--rui_defaultBorder);
+		}
 	}
 }

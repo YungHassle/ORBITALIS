@@ -3,7 +3,6 @@
 import {Avatar, Button, Flex, Form, Input, message, Modal, Select, Space, Spin, Tooltip} from "antd"
 import classes from "./page.module.scss"
 import {LoadingOutlined, UserOutlined} from "@ant-design/icons"
-import {getRandomColor} from "_utils/getRandomColor"
 import {useEffect, useState} from "react"
 import TextArea from "antd/es/input/TextArea"
 import {createTask, deleteTask, getTasks, updateTask} from "_api/admin/tasksList"

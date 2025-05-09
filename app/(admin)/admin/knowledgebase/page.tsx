@@ -1,7 +1,8 @@
-import {getNewsList} from "_api/admin/newsList"
+import {getTasks, getUsersForTasks} from "_api/admin/tasksList"
 import ClientPage from "./page.client"
 
 export default async function Page() {
-	const newsList = await getNewsList()
-	return <ClientPage newsList={newsList as any} />
+	const tasksList = await getTasks()
+	const usersList = await getUsersForTasks()
+	return <ClientPage tasksList={tasksList} usersList={usersList} />
 }
