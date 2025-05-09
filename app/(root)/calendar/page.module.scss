@@ -22,12 +22,12 @@
 	.workDay {
 		background-color: #e6f7ff;
 	}
-}
-.holiday {
-	background-color: #fff1f0;
-	color: #ff4d4f;
+	.holiday {
+		background-color: #fff1f0;
+		color: #ff4d4f;
 
-	&:hover {
-		background-color: #ffccc7;
+		&:hover {
+			background-color: #ffccc7;
+		}
 	}
 }
