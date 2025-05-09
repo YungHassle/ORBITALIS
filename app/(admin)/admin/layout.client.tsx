@@ -66,6 +66,13 @@ export default function ClientLayout({children, user, isMobileView}) {
 												},
 											},
 											isMobileView && {
+												key: "admin/knowledgebase",
+												label: "База знаний",
+												onClick: () => {
+													router.replace("/admin/knowledgebase")
+												},
+											},
+											isMobileView && {
 												key: "admin/tasks",
 												label: "Задачи",
 												onClick: () => {
@@ -150,6 +157,10 @@ export default function ClientLayout({children, user, isMobileView}) {
 										{
 											key: "admin/news",
 											label: "Новости",
+										},
+										{
+											key: "admin/knowledgebase",
+											label: "База знаний",
 										},
 										{
 											key: "admin/tasks",
