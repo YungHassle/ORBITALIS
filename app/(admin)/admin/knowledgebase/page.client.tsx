@@ -1,13 +1,13 @@
 "use client"
 
-import {Avatar, Button, Flex, Form, Input, message, Modal, Select, Space, Spin, Tooltip} from "antd"
+import {Button, Flex, Form, Input, message, Modal, Space, Spin} from "antd"
 import classes from "./page.module.scss"
-import {LoadingOutlined, UserOutlined} from "@ant-design/icons"
+import {LoadingOutlined} from "@ant-design/icons"
 import {useEffect, useState} from "react"
 import TextArea from "antd/es/input/TextArea"
-import {createTask, deleteTask, getTasks, updateTask} from "_api/admin/tasksList"
+import {createArticle, deleteArticle, getArticles, updateArticle} from "_api/admin/articlesList"
 
-interface Task {
+interface Article {
 	_id: string
 	num: number
 	name: string
@@ -17,158 +17,128 @@ interface Task {
 	type: string
 	createdAt?: string
 }
-interface User {
-	_id: string
-	name: string
-	color: string
-}
 
-export default function ClientPage({tasksList, usersList}: any) {
+export default function ClientPage({ArticlesList}: any) {
 	const [form] = Form.useForm()
 	const [editForm] = Form.useForm()
 	const [messageApi] = message.useMessage()
 	const [loading, setLoading] = useState(false)
-	const [tasks, setTasks] = useState<Task[]>(tasksList)
-	const [users, setUsers] = useState<User[]>(usersList)
-	const [selectedTask, setSelectedTask] = useState<Task | null>(null)
-	const [createTaskModal, setCreateTaskModal] = useState(false)
-	const [changeTaskModal, setChangeTaskModal] = useState(false)
+	const [Articles, setArticles] = useState<Article[]>(ArticlesList)
+	const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
+	const [createArticleModal, setCreateArticleModal] = useState(false)
+	const [changeArticleModal, setChangeArticleModal] = useState(false)
 	const [toRightData, setToRightData] = useState<any>(null)
 
-	const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasksList)
+	const [filteredArticles, setFilteredArticles] = useState<Article[]>(ArticlesList)
 	const [nameFilter, setNameFilter] = useState("")
-	const [userFilter, setUserFilter] = useState(null)
-	const [statusFilter, setStatusFilter] = useState(null)
-
-	const categories = [
-		{name: "В работе", type: "work"},
-		{name: "Выполнена", type: "done"},
-		{name: "Отложена", type: "postpone"},
-		{name: "В тестировании", type: "testing"},
-		{name: "Закрыта", type: "closed"},
-		{name: "Отменена", type: "canceled"},
-		{name: "Создана", type: "created"},
-	]
 
 	useEffect(() => {
-		let result = [...tasks]
+		let result = [...Articles]
 
 		if (nameFilter) {
-			result = result.filter((task) => task.name.toLowerCase().includes(nameFilter.toLowerCase()))
+			result = result.filter((Article) => Article.name.toLowerCase().includes(nameFilter.toLowerCase()))
 		}
 
-		if (userFilter) {
-			result = result.filter((task) => task.userId === userFilter)
-		}
+		setFilteredArticles(result)
+	}, [Articles, nameFilter])
 
-		if (statusFilter) {
-			result = result.filter((task) => task.type === statusFilter)
-		}
-
-		setFilteredTasks(result)
-	}, [tasks, nameFilter, userFilter, statusFilter])
-
-	const handleCreate = async (values: any) => {
-		try {
-			const result = await createTask({
-				...values,
-				userId: values.userId,
-			})
-
-			if (result.success) {
-				setToRightData(null)
-				setSelectedTask(null)
-				messageApi.success(`Задача ORB_${result.taskNum} успешно создана!`)
-				setCreateTaskModal(false)
-				form.resetFields()
-				getTasks().then((tasks) => setTasks(tasks as any))
-			}
-		} catch (error) {
-			messageApi.error("Произошла ошибка: " + (error instanceof Error ? error.message : "Unknown error"))
-		}
-	}
-
-	const handleUpdate = async (values: any) => {
-		if (!selectedTask) return
-
-		try {
-			const result = await updateTask(selectedTask._id, {
-				...values,
-				userId: values.userId,
-			})
-
-			if (result.success) {
-				setToRightData(null)
-				setSelectedTask(null)
-				messageApi.success("Задача успешно обновлена!")
-				setChangeTaskModal(false)
-				editForm.resetFields()
-				getTasks().then((tasks) => setTasks(tasks as any))
-			}
-		} catch (error) {
-			messageApi.error("Произошла ошибка: " + (error instanceof Error ? error.message : "Unknown error"))
-		}
-	}
-
-	const handleDelete = async () => {
-		if (!selectedTask) return
-
-		try {
-			const result = await deleteTask(selectedTask._id)
-			if (result.success) {
-				setToRightData(null)
-				setSelectedTask(null)
-				setChangeTaskModal(false)
-				messageApi.success("Задача удалена")
-				editForm.resetFields()
-				getTasks().then((tasks) => setTasks(tasks as any))
-			} else {
-				messageApi.error(result.error || "Ошибка удаления")
-			}
-		} catch (error) {
-			messageApi.error("Ошибка при удалении")
-		}
-	}
-
-	const handleTaskSelect = (task: Task) => {
+	const handleArticleSelect = (Article: Article) => {
 		setLoading(true)
-		setSelectedTask(task)
-		setToRightData(task)
+		setSelectedArticle(Article)
+		setToRightData(Article)
 		editForm.resetFields()
 		setTimeout(() => setLoading(false), 1000)
 	}
 
 	useEffect(() => {
-		if (changeTaskModal && selectedTask) {
+		if (changeArticleModal && selectedArticle) {
 			editForm.setFieldsValue({
-				name: selectedTask.name,
-				desc: selectedTask.desc,
-				userId: selectedTask.userId,
-				type: selectedTask.type,
+				name: selectedArticle.name,
+				desc: selectedArticle.desc,
+				userId: selectedArticle.userId,
+				type: selectedArticle.type,
 			})
 		}
-	}, [changeTaskModal, selectedTask, editForm])
+	}, [changeArticleModal, selectedArticle, editForm])
 
-	const handleStatusChange = async (value: string) => {
-		if (!selectedTask) return
-
+	const handleCreate = async (values: any) => {
 		try {
-			const result = await updateTask(selectedTask._id, {type: value})
+			const result = await createArticle({
+				...values,
+			})
+
 			if (result.success) {
-				messageApi.success("Статус задачи обновлен")
-				const updatedTasks = await getTasks()
-				setTasks(updatedTasks as any)
-				const updatedTask = updatedTasks.find((t) => t._id === selectedTask._id)
-				if (updatedTask) setSelectedTask(updatedTask as any)
+				setToRightData(null)
+				setSelectedArticle(null)
+				messageApi.success("Статья успешно создана")
+				const updatedArticles = await getArticles()
+				setArticles(updatedArticles as any)
+				setCreateArticleModal(false)
+				form.resetFields()
+			} else {
+				messageApi.error("Ошибка при создании статьи")
 			}
 		} catch (error) {
-			messageApi.error("Ошибка при обновлении статуса")
+			messageApi.error("Ошибка при создании статьи")
+		}
+	}
+
+	const handleUpdate = async (values: any) => {
+		if (!selectedArticle) return
+
+		try {
+			const result = await updateArticle(selectedArticle._id, values)
+
+			if (result.success) {
+				setToRightData(null)
+				setSelectedArticle(null)
+				messageApi.success("Статья успешно обновлена")
+				const updatedArticles = await getArticles()
+				setArticles(updatedArticles as any)
+				setChangeArticleModal(false)
+				editForm.resetFields()
+			} else {
+				messageApi.error("Ошибка при обновлении статьи")
+			}
+		} catch (error) {
+			messageApi.error("Ошибка при обновлении статьи")
+		}
+	}
+
+	const handleDelete = async () => {
+		if (!selectedArticle) return
+
+		try {
+			const result = await deleteArticle(selectedArticle._id)
+
+			if (result.success) {
+				setToRightData(null)
+				setSelectedArticle(null)
+				messageApi.success("Статья успешно удалена")
+				const updatedArticles = await getArticles()
+				setArticles(updatedArticles as any)
+				setChangeArticleModal(false)
+				editForm.resetFields()
+			} else {
+				messageApi.error("Ошибка при удалении статьи")
+			}
+		} catch (error) {
+			messageApi.error("Ошибка при удалении статьи")
 		}
 	}
 
 	return (
 		<div className={classes.root}>
-			<Flex vertical gap={"1em"} style={{width: "66%"}}>
+			<Flex vertical gap={"1em"} style={{width: "33%"}}>
+				<Button
+					type='primary'
+					size='large'
+					onClick={() => {
+						setCreateArticleModal(true)
+					}}
+				>
+					Создать статью
+				</Button>
 				<Flex gap={"1em"}>
 					<Input
 						size='large'
@@ -178,76 +148,32 @@ export default function ClientPage({tasksList, usersList}: any) {
 						value={nameFilter}
 						onChange={(e) => setNameFilter(e.target.value)}
 					/>
-					<Select
-						size='large'
-						style={{width: "100%"}}
-						allowClear
-						options={users.map((user) => ({label: user.name, value: user._id}))}
-						showSearch
-						optionFilterProp='label'
-						placeholder='Выберите исполнителя'
-						value={userFilter}
-						onChange={(value) => setUserFilter(value)}
-					/>
-					<Select
-						size='large'
-						style={{width: "100%"}}
-						allowClear
-						options={categories.map((category) => ({label: category.name, value: category.type}))}
-						showSearch
-						optionFilterProp='label'
-						placeholder='Выберите статус'
-						value={statusFilter}
-						onChange={(value) => setStatusFilter(value)}
-					/>
 				</Flex>
 				<Space direction='vertical' className={classes.blockLeft}>
-					{filteredTasks.length === 0 ? (
-						<div>Задачи не найдены</div>
+					{filteredArticles?.length === 0 ? (
+						<div>Статьи не найдены</div>
 					) : (
-						filteredTasks.map((e, i) => (
+						filteredArticles?.map((e, i) => (
 							<Space
 								align='start'
 								key={i}
-								className={classes.taskBlock}
+								className={classes.articleBlock}
 								onClick={() => {
-									handleTaskSelect(e)
+									handleArticleSelect(e)
 								}}
 							>
-								<Flex gap={"1em"}>
-									<div className={classes.num}>ORB_{e.num}</div>
-									<div>{e.name}</div>
-								</Flex>
-								<Flex align='center' gap={"1em"}>
-									<div style={{color: "grey"}}>{categories.find((c) => c.type === e.type)?.name}</div>
-									<Tooltip title={usersList.find((u) => u._id === e.userId)?.name} placement='bottom'>
-										<Avatar
-											size={"default"}
-											style={{backgroundColor: usersList.find((u) => u._id === e.userId)?.color, minWidth: "32px"}}
-											icon={<UserOutlined />}
-										/>
-									</Tooltip>
-								</Flex>
+								<div>{e.name}</div>
 							</Space>
 						))
 					)}
 				</Space>
 			</Flex>
-			<Flex vertical style={{width: "34%"}} gap={"1em"}>
-				<Button
-					type='primary'
-					size='large'
-					onClick={() => {
-						setCreateTaskModal(true)
-					}}
-				>
-					Создать задачу
-				</Button>
+			<Flex vertical style={{width: "67%"}} gap={"1em"}>
 				<Modal
-					title='Создание задачи'
-					open={createTaskModal}
+					title='Создание статьи'
+					open={createArticleModal}
 					onCancel={() => {
-						setCreateTaskModal(false)
+						setCreateArticleModal(false)
 					}}
 					footer={null}
 				>
@@ -258,17 +184,6 @@ export default function ClientPage({tasksList, usersList}: any) {
 						<Form.Item label='Описание' name='desc' rules={[{required: true}]}>
 							<TextArea rows={4} />
 						</Form.Item>
-						<Form.Item label='Назначить на' name='userId' rules={[{required: true}]}>
-							<Select
-								options={users.map((user) => ({label: user.name, value: user._id}))}
-								showSearch
-								optionFilterProp='label'
-								placeholder='Выберите пользователя'
-							/>
-						</Form.Item>
-						<Form.Item label='Статус' name='type' initialValue='created'>
-							<Select options={categories.map((cat) => ({label: cat.name, value: cat.type}))} />
-						</Form.Item>
 						<Button type='primary' htmlType='submit' style={{width: "100%"}}>
 							Создать
 						</Button>
@@ -277,7 +192,7 @@ export default function ClientPage({tasksList, usersList}: any) {
 				<Space direction='vertical' className={classes.blockRight}>
 					{!loading && toRightData == null && (
 						<Space className={classes.block} direction='vertical' size={20} style={{justifyContent: "center", alignItems: "center"}}>
-							<div style={{fontSize: "1.35em"}}>Выберите задачу или создайте новую</div>
+							<div style={{fontSize: "1.35em"}}>Выберите статью или создайте новую</div>
 						</Space>
 					)}
 					{loading && (
@@ -287,30 +202,18 @@ export default function ClientPage({tasksList, usersList}: any) {
 					)}
 					{!loading && toRightData && (
 						<Space className={classes.block} direction='vertical' size={20}>
-							<Button type='primary' size='large' style={{width: "100%"}} className={classes.button} onClick={() => setChangeTaskModal(true)}>
-								Редактировать задачу
+							<Button type='primary' size='large' style={{width: "100%"}} className={classes.button} onClick={() => setChangeArticleModal(true)}>
+								Редактировать статью
 							</Button>
-							<Flex justify='space-between' align='center'>
-								<div>ORB_{toRightData?.num}</div>
-								<Select
-									className={classes.select}
-									value={selectedTask?.type}
-									options={categories.map((cat) => ({label: cat.name, value: cat.type}))}
-									onChange={handleStatusChange}
-								/>
-							</Flex>
-							<Flex>
-								<div>Исполнитель:&nbsp;</div> <div>{usersList.find((u) => u._id === toRightData?.userId)?.name}</div>
-							</Flex>
 							<div className={classes.name}>{toRightData?.name}</div>
 							<div className={classes.desc}>{toRightData?.desc}</div>
 						</Space>
 					)}
 					<Modal
-						title='Редактирование задачи'
-						open={changeTaskModal}
+						title='Редактирование статьи'
+						open={changeArticleModal}
 						onCancel={() => {
-							setChangeTaskModal(false)
+							setChangeArticleModal(false)
 						}}
 						footer={null}
 					>
@@ -318,10 +221,10 @@ export default function ClientPage({tasksList, usersList}: any) {
 							form={editForm}
 							layout='vertical'
 							initialValues={{
-								name: selectedTask?.name,
-								desc: selectedTask?.desc,
-								userId: selectedTask?.userId,
-								type: selectedTask?.type,
+								name: selectedArticle?.name,
+								desc: selectedArticle?.desc,
+								userId: selectedArticle?.userId,
+								type: selectedArticle?.type,
 							}}
 							onFinish={handleUpdate}
 						>
@@ -330,12 +233,6 @@ export default function ClientPage({tasksList, usersList}: any) {
 							</Form.Item>
 							<Form.Item label='Описание' name='desc' rules={[{required: true}]}>
 								<TextArea rows={4} />
-							</Form.Item>
-							<Form.Item label='Назначить на' name='userId' rules={[{required: true}]}>
-								<Select options={users.map((e) => ({label: e.name, value: e._id}))} showSearch optionFilterProp='label' />
-							</Form.Item>
-							<Form.Item label='Статус' name='type'>
-								<Select options={categories.map((e) => ({label: e.name, value: e.type}))} />
 							</Form.Item>
 							<Flex vertical gap={"1em"}>
 								<Button type='primary' htmlType='submit' style={{width: "100%"}}>

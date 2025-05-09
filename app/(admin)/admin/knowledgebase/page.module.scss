@@ -4,11 +4,11 @@
 	.blockLeft {
 		padding: 1em;
 		overflow-y: auto;
-		max-height: 37em;
+		max-height: 34em;
 		gap: 1em;
 		width: 100%;
 	}
-	.taskBlock {
+	.articleBlock {
 		cursor: pointer;
 		justify-content: space-between;
 		width: 100%;
@@ -25,12 +25,12 @@
 	.blockRight {
 		padding: 1em;
 		overflow-y: auto;
-		max-height: 38em;
+		max-height: 41em;
 		gap: 1em;
 		width: 100%;
 
 		.block {
-			min-height: 36em;
+			min-height: 39em;
 			width: 100%;
 			gap: 2em;
 			padding: 1em;
