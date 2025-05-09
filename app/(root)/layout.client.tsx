@@ -43,11 +43,6 @@ export default function ClientLayout({children, user, isMobileView}) {
 											Перейти в контрольную панель
 										</Button>
 									)}
-									{!isMobileView && (
-										<Button type='primary' size='large' style={{minWidth: "10em"}}>
-											Пройти тест
-										</Button>
-									)}
 									{/* {!selectHoliday && (
 										<Button type='primary' size='large' style={{minWidth: "10em"}} onClick={() => setSelectHoliday(true)}>
 											Выбрать отпуск
@@ -73,20 +68,14 @@ export default function ClientLayout({children, user, isMobileView}) {
 								<Dropdown
 									menu={{
 										items: [
-											isMobileView && {
-												key: "/admin",
-												label: "Перейти в контрольную панель",
-												onClick: () => {
-													router.replace("/admin")
+											isMobileView &&
+												user?.role === "admin" && {
+													key: "/admin",
+													label: "Перейти в контрольную панель",
+													onClick: () => {
+														router.replace("/admin")
+													},
 												},
-											},
-											isMobileView && {
-												key: "/test",
-												label: "Пройти тест",
-												onClick: () => {
-													router.replace("/test")
-												},
-											},
 											isMobileView && {
 												key: "/",
 												label: "Главная",
@@ -113,6 +102,13 @@ export default function ClientLayout({children, user, isMobileView}) {
 												label: "Задачи",
 												onClick: () => {
 													router.replace("/tasks")
+												},
+											},
+											isMobileView && {
+												key: "/test",
+												label: "Тесты",
+												onClick: () => {
+													router.replace("/test")
 												},
 											},
 											isMobileView && {
@@ -216,6 +212,7 @@ export default function ClientLayout({children, user, isMobileView}) {
 											key: "tasks",
 											label: "Задачи",
 										},
+										{key: "test", label: "Тесты"},
 										{
 											key: "company",
 											label: "Компания",
