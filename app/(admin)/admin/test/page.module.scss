@@ -1,0 +1,54 @@
+.root {
+	display: flex;
+	gap: 1em;
+	.blockLeft {
+		padding: 1em;
+		overflow-y: auto;
+		max-height: 34em;
+		gap: 1em;
+		width: 100%;
+	}
+	.articleBlock {
+		cursor: pointer;
+		justify-content: space-between;
+		width: 100%;
+		gap: 2em;
+		padding: 1em 2em;
+		min-height: 4em;
+		box-shadow: var(--rui_shadow);
+		background-color: var(--rui_white) !important;
+		border-radius: var(--rui_defaultBorder);
+		.num {
+			font-weight: 500;
+		}
+	}
+	.blockRight {
+		padding: 1em;
+		overflow-y: auto;
+		max-height: 41em;
+		gap: 1em;
+		width: 100%;
+
+		.block {
+			min-height: 39em;
+			width: 100%;
+			gap: 2em;
+			padding: 1em;
+			box-shadow: var(--rui_shadow);
+			background-color: var(--rui_white) !important;
+			border-radius: var(--rui_defaultBorder);
+			.name {
+				font-size: 1.35em;
+			}
+			.desc {
+				font-size: 0.9em;
+			}
+		}
+	}
+	.select {
+		min-width: 16em;
+	}
+	.button {
+		width: 15em;
+	}
+}
