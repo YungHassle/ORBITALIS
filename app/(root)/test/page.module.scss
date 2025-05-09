@@ -1,0 +1,215 @@
+.testsContainer {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 1rem;
+}
+
+.testsTitle {
+	font-size: 2rem;
+	font-weight: bold;
+	margin-bottom: 1.5rem;
+	text-align: center;
+}
+
+.testsGrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	gap: 1.5rem;
+}
+
+// Стили для карточек тестов
+.testCard {
+	background: white;
+	padding: 1.5rem;
+	border-radius: 0.5rem;
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+	cursor: pointer;
+	transition: all 0.3s ease;
+
+	&:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15);
+	}
+}
+
+.testCardTitle {
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+}
+
+.questionsCount {
+	color: #6c757d;
+	font-size: 0.9rem;
+}
+
+// Стили для страницы результатов
+.resultsWrapper {
+	max-width: 600px;
+	margin: 0 auto;
+	padding: 1rem;
+}
+
+.resultsContainer {
+	background: white;
+	padding: 2rem;
+	border-radius: 0.5rem;
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+	text-align: center;
+}
+
+.resultsTitle {
+	font-size: 2rem;
+	font-weight: bold;
+	margin-bottom: 1rem;
+}
+
+.testTitle {
+	font-size: 1.5rem;
+	font-weight: 600;
+	margin-bottom: 1.5rem;
+}
+
+.score {
+	font-size: 3rem;
+	font-weight: bold;
+	margin: 1.5rem 0;
+	color: #4361ee;
+}
+
+.percentage {
+	color: #6c757d;
+	font-size: 1.25rem;
+	margin-bottom: 2rem;
+}
+
+.returnButton {
+	background: #4361ee;
+	color: white;
+	padding: 0.75rem 1.5rem;
+	border-radius: 0.5rem;
+	border: none;
+	font-size: 1rem;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.3s ease;
+
+	&:hover {
+		background: #3a56d4;
+	}
+}
+
+// Стили для страницы теста
+.testWrapper {
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 1rem;
+}
+
+.testContent {
+	background: white;
+	padding: 1.5rem;
+	border-radius: 0.5rem;
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.testHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1.5rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid #eee;
+}
+
+.testName {
+	font-size: 1.5rem;
+	font-weight: 600;
+	margin: 0;
+}
+
+.progress {
+	color: #6c757d;
+	font-size: 0.9rem;
+}
+
+.questionBlock {
+	margin-bottom: 2rem;
+}
+
+.questionText {
+	font-size: 1.25rem;
+	font-weight: 500;
+	margin-bottom: 1.5rem;
+}
+
+.optionsList {
+	display: grid;
+	gap: 1rem;
+}
+
+.optionItem {
+	padding: 1rem;
+	border: 1px solid #ddd;
+	border-radius: 0.5rem;
+	cursor: pointer;
+	transition: all 0.3s ease;
+
+	&:hover {
+		background: #f8f9fa;
+		border-color: #4361ee;
+	}
+}
+
+.selectedOption {
+	background: #e7f1ff;
+	border-color: #4361ee;
+	color: #4361ee;
+}
+
+.navigationButtons {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 2rem;
+}
+
+.navButton {
+	padding: 0.75rem 1.5rem;
+	border-radius: 0.5rem;
+	border: none;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.3s ease;
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+}
+
+.prevButton {
+	background: #f8f9fa;
+	color: #212529;
+
+	&:hover:not(:disabled) {
+		background: #e9ecef;
+	}
+}
+
+.nextButton,
+.submitButton {
+	background: #4361ee;
+	color: white;
+
+	&:hover:not(:disabled) {
+		background: #3a56d4;
+	}
+}
+
+.submitButton {
+	background: #4caf50;
+
+	&:hover:not(:disabled) {
+		background: #43a047;
+	}
+}

@@ -3,13 +3,20 @@
 import {getColl} from "_db"
 import {ObjectId} from "mongodb"
 
+export interface TestOption {
+	text: string
+	isCorrect: boolean
+}
+
 export interface TestQuestion {
-	_id?: ObjectId
 	question: string
-	options: {
-		text: string
-		isCorrect: boolean
-	}[]
+	options: TestOption[]
+}
+
+export interface Test {
+	_id?: ObjectId
+	title: string
+	questions: TestQuestion[]
 	createdAt?: Date
 	updatedAt?: Date
 }
@@ -25,7 +32,7 @@ export async function getTests() {
 	}
 }
 
-export async function createTest(testData: Omit<TestQuestion, "_id" | "createdAt" | "updatedAt">) {
+export async function createTest(testData: Omit<Test, "_id" | "createdAt" | "updatedAt">) {
 	try {
 		const testsCollection = await getColl("tests")
 		const newTest = {
@@ -41,16 +48,14 @@ export async function createTest(testData: Omit<TestQuestion, "_id" | "createdAt
 	}
 }
 
-export async function updateTest(id: string, testData: Partial<TestQuestion>) {
+export async function updateTest(id: string, testData: Partial<Test>) {
 	try {
 		const testsCollection = await getColl("tests")
 		const updateData = {
-			question: testData.question,
-			options: testData.options,
+			title: testData.title,
+			questions: testData.questions,
 			updatedAt: new Date(),
 		}
-		// Удаляем undefined поля
-		Object.keys(updateData).forEach((key) => updateData[key] === undefined && delete updateData[key])
 
 		const result = await testsCollection.updateOne({_id: new ObjectId(id)}, {$set: updateData})
 		return {

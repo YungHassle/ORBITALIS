@@ -1,19 +1,25 @@
 "use client"
 
-import {createTest, deleteTest, getTests, TestQuestion, updateTest} from "_api/admin/testsList"
+import {createTest, deleteTest, getTests, Test, updateTest} from "_api/admin/testsList"
 import {ObjectId} from "mongodb"
-import React, {useState, useEffect} from "react"
+import React, {useState} from "react"
+import styles from "./page.module.scss"
 
-export default function ClientPage({testsList}: any) {
-	const [tests, setTests] = useState<TestQuestion[]>(testsList)
-	const [currentTest, setCurrentTest] = useState<Partial<TestQuestion>>({
-		question: "",
-		options: [
-			{text: "", isCorrect: false},
-			{text: "", isCorrect: false},
-			{text: "", isCorrect: false},
-			{text: "", isCorrect: false},
-		],
+const initialQuestion = {
+	question: "",
+	options: [
+		{text: "", isCorrect: false},
+		{text: "", isCorrect: false},
+		{text: "", isCorrect: false},
+		{text: "", isCorrect: false},
+	],
+}
+
+export default function ClientPage({testsList}: {testsList: Test[]}) {
+	const [tests, setTests] = useState<Test[]>(testsList)
+	const [currentTest, setCurrentTest] = useState<Partial<Test>>({
+		title: "",
+		questions: [JSON.parse(JSON.stringify(initialQuestion))],
 	})
 	const [isEditing, setIsEditing] = useState(false)
 	const [loading, setLoading] = useState(false)
@@ -32,40 +38,93 @@ export default function ClientPage({testsList}: any) {
 		setCurrentTest((prev) => ({...prev, [name]: value}))
 	}
 
-	const handleOptionChange = (index: number, field: "text" | "isCorrect", value: string | boolean) => {
+	const handleQuestionChange = (index: number, field: string, value: string) => {
 		setCurrentTest((prev) => {
-			const newOptions = [...prev.options!]
-			newOptions[index] = {...newOptions[index], [field]: value}
-			return {...prev, options: newOptions}
+			const newQuestions = [...(prev.questions || [])]
+			newQuestions[index] = {...newQuestions[index], [field]: value}
+			return {...prev, questions: newQuestions}
 		})
+	}
+
+	const handleOptionChange = (questionIndex: number, optionIndex: number, field: "text" | "isCorrect", value: string | boolean) => {
+		setCurrentTest((prev) => {
+			const newQuestions = [...(prev.questions || [])]
+			const newOptions = [...newQuestions[questionIndex].options]
+			newOptions[optionIndex] = {...newOptions[optionIndex], [field]: value}
+			newQuestions[questionIndex] = {
+				...newQuestions[questionIndex],
+				options: newOptions,
+			}
+			return {...prev, questions: newQuestions}
+		})
+	}
+
+	const addQuestion = () => {
+		if (currentTest.questions && currentTest.questions.length < 10) {
+			setCurrentTest((prev) => ({
+				...prev,
+				questions: [...(prev.questions || []), JSON.parse(JSON.stringify(initialQuestion))],
+			}))
+		}
+	}
+
+	const removeQuestion = (index: number) => {
+		if (currentTest.questions && currentTest.questions.length > 1) {
+			setCurrentTest((prev) => {
+				const newQuestions = [...(prev.questions || [])]
+				newQuestions.splice(index, 1)
+				return {...prev, questions: newQuestions}
+			})
+		}
 	}
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		setLoading(true)
 
-		if (isEditing && currentTest._id) {
-			const response = await updateTest(currentTest._id.toString(), currentTest)
-			if (response.success) {
-				await fetchTests()
-				resetForm()
-			}
-		} else {
-			const response = await createTest(currentTest as Omit<TestQuestion, "_id" | "createdAt" | "updatedAt">)
-			if (response.success) {
-				await fetchTests()
-				resetForm()
-			}
-		}
+		try {
+			if (isEditing && currentTest._id) {
+				// Создаем полный объект теста для обновления
+				const testToUpdate = {
+					title: currentTest.title,
+					questions: currentTest.questions,
+				}
 
-		setLoading(false)
+				const response = await updateTest(currentTest._id.toString(), testToUpdate)
+				if (response.success) {
+					await fetchTests()
+					resetForm()
+				} else {
+					console.error("Failed to update test")
+				}
+			} else {
+				// Создание нового теста
+				const response = await createTest({
+					title: currentTest.title || "",
+					questions: currentTest.questions || [],
+				})
+				if (response.success) {
+					await fetchTests()
+					resetForm()
+				} else {
+					console.error("Failed to create test")
+				}
+			}
+		} catch (error) {
+			console.error("Error:", error)
+		} finally {
+			setLoading(false)
+		}
 	}
 
-	const handleEdit = (test: TestQuestion) => {
+	const handleEdit = (test: Test) => {
 		setCurrentTest({
 			_id: test._id,
-			question: test.question,
-			options: test.options.map((opt) => ({...opt})), // полная копия массива
+			title: test.title,
+			questions: test.questions.map((q) => ({
+				question: q.question,
+				options: q.options.map((opt) => ({...opt})),
+			})),
 		})
 		setIsEditing(true)
 	}
@@ -83,105 +142,129 @@ export default function ClientPage({testsList}: any) {
 
 	const resetForm = () => {
 		setCurrentTest({
-			question: "",
-			options: [
-				{text: "", isCorrect: false},
-				{text: "", isCorrect: false},
-				{text: "", isCorrect: false},
-				{text: "", isCorrect: false},
-			],
+			title: "",
+			questions: [JSON.parse(JSON.stringify(initialQuestion))],
 		})
 		setIsEditing(false)
 	}
 
 	return (
-		<div className='container mx-auto p-4'>
-			<h1 className='text-2xl font-bold mb-6'>Управление тестами</h1>
+		<div className={styles.container}>
+			<h1 className={styles.header}>Управление тестами</h1>
 
-			<div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+			<div className={styles.gridContainer}>
 				{/* Форма создания/редактирования */}
-				<div className='bg-white p-6 rounded-lg shadow-md'>
-					<h2 className='text-xl font-semibold mb-4'>{isEditing ? "Редактировать тест" : "Создать новый тест"}</h2>
+				<div className={styles.testForm}>
+					<h2 className={styles.formTitle}>{isEditing ? "Редактировать тест" : "Создать новый тест"}</h2>
 					<form onSubmit={handleSubmit}>
-						<div className='mb-4'>
-							<label className='block text-gray-700 mb-2'>Вопрос:</label>
-							<input
-								type='text'
-								name='question'
-								value={currentTest.question || ""}
-								onChange={handleInputChange}
-								className='w-full p-2 border rounded'
-								required
-							/>
+						<div className={styles.formGroup}>
+							<label>Название теста:</label>
+							<input type='text' name='title' value={currentTest.title || ""} onChange={handleInputChange} required />
 						</div>
 
-						<div className='mb-4'>
-							<label className='block text-gray-700 mb-2'>Варианты ответов:</label>
-							{currentTest.options?.map((option, index) => (
-								<div key={index} className='mb-2 flex items-center'>
-									<input
-										type='text'
-										value={option.text}
-										onChange={(e) => handleOptionChange(index, "text", e.target.value)}
-										className='flex-1 p-2 border rounded mr-2'
-										required
-									/>
-									<input
-										type='checkbox'
-										checked={option.isCorrect}
-										onChange={(e) => handleOptionChange(index, "isCorrect", e.target.checked)}
-										className='h-5 w-5'
-									/>
-									<span className='ml-1'>Правильный</span>
+						<div className={styles.formGroup}>
+							<label>Вопросы:</label>
+							{currentTest.questions?.map((question, qIndex) => (
+								<div key={qIndex} className={styles.questionBlock}>
+									<div className={styles.questionHeader}>
+										<h3>Вопрос {qIndex + 1}</h3>
+										{currentTest.questions && currentTest.questions.length > 1 && (
+											<button type='button' onClick={() => removeQuestion(qIndex)} className={styles.deleteQuestionBtn}>
+												Удалить вопрос
+											</button>
+										)}
+									</div>
+									<div className={styles.formGroup}>
+										<input
+											type='text'
+											value={question.question}
+											onChange={(e) => handleQuestionChange(qIndex, "question", e.target.value)}
+											placeholder='Текст вопроса'
+											required
+										/>
+									</div>
+									<div>
+										<label>Варианты ответов:</label>
+										{question.options.map((option, oIndex) => (
+											<div key={oIndex} className={styles.optionItem}>
+												<input
+													type='text'
+													value={option.text}
+													onChange={(e) => handleOptionChange(qIndex, oIndex, "text", e.target.value)}
+													placeholder='Вариант ответа'
+													required
+												/>
+												<label className={styles.checkboxLabel}>
+													<input
+														type='checkbox'
+														checked={option.isCorrect}
+														onChange={(e) => handleOptionChange(qIndex, oIndex, "isCorrect", e.target.checked)}
+													/>
+													<span>Правильный</span>
+												</label>
+											</div>
+										))}
+									</div>
 								</div>
 							))}
+							{currentTest.questions && currentTest.questions.length < 10 && (
+								<button type='button' onClick={addQuestion} className={styles.addQuestionBtn}>
+									+ Добавить вопрос
+								</button>
+							)}
 						</div>
 
-						<div className='flex space-x-2'>
-							<button
-								type='submit'
-								disabled={loading}
-								className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-blue-300'
-							>
+						<div className={styles.formActions}>
+							<button type='submit' disabled={loading} className={`${styles.button} ${styles.submit}`}>
 								{isEditing ? "Обновить" : "Создать"}
 							</button>
 							{isEditing && (
-								<button type='button' onClick={resetForm} className='bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600'>
+								<button type='button' onClick={resetForm} className={`${styles.button} ${styles.cancel}`}>
 									Отмена
 								</button>
 							)}
 						</div>
 					</form>
 				</div>
-				<div>
-					<h2 className='text-xl font-semibold mb-4'>Список тестов</h2>
+
+				{/* Список тестов */}
+				<div className={styles.testsList}>
+					<h2>Список тестов</h2>
 					{loading ? (
 						<p>Загрузка...</p>
 					) : !Array.isArray(tests) || tests.length === 0 ? (
 						<p>Тесты не найдены</p>
 					) : (
-						<div className='space-y-4'>
-							{tests &&
-								tests?.map((test) => (
-									<div key={test._id!.toString()} className='bg-white p-4 rounded-lg shadow'>
-										<h3 className='font-medium'>{test.question}</h3>
-										<ul className='mt-2 ml-4 list-disc'>
-											{test.options.map((opt, i) => (
-												<li key={i} className={opt.isCorrect ? "text-green-600" : ""}>
-													{opt.text} {opt.isCorrect && "(Правильный)"}
-												</li>
-											))}
-										</ul>
-										<div className='mt-2 flex space-x-2'>
-											<button onClick={() => handleEdit(test)} className='text-blue-500 hover:text-blue-700'>
-												Редактировать
-											</button>
-											<button onClick={() => handleDelete(test._id!)} className='text-red-500 hover:text-red-700'>
-												Удалить
-											</button>
-										</div>
+						<div className={styles.testsContainer}>
+							{tests.map((test) => (
+								<div key={test._id!.toString()} className={styles.testCard}>
+									<h3>{test.title}</h3>
+									<div className={styles.questionsList}>
+										{test.questions.map((question, qIndex) => (
+											<div key={qIndex} className={styles.questionItem}>
+												<h4>
+													{qIndex + 1}. {question.question}
+												</h4>
+												<ul className={styles.optionsList}>
+													{question.options.map((opt, oIndex) => (
+														<li key={oIndex} className={opt.isCorrect ? styles.correctOption : ""}>
+															{opt.text} {opt.isCorrect && "(Правильный)"}
+														</li>
+													))}
+												</ul>
+											</div>
+										))}
 									</div>
-								))}
+									<div className={styles.cardActions}>
+										<button onClick={() => handleEdit(test)} className={styles.editBtn}>
+											Редактировать
+										</button>
+										<button onClick={() => handleDelete(test._id!)} className={styles.deleteBtn}>
+											Удалить
+										</button>
+									</div>
+								</div>
+							))}
 						</div>
 					)}
 				</div>
