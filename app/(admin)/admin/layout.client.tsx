@@ -13,7 +13,7 @@ import {useState} from "react"
 import dayjs from "dayjs"
 import {updateUser} from "_api/user"
 
-export default function ClientLayout({children, user}) {
+export default function ClientLayout({children, user, isMobileView}) {
 	const router = useRouter()
 
 	const path = usePathname()
@@ -22,7 +22,7 @@ export default function ClientLayout({children, user}) {
 	const [profileModal, setProfileModal] = useState(false)
 
 	return (
-		<div className={classes.root} style={{display: "flex", justifyContent: "center"}}>
+		<div className={isMobileView ? classes.rootMobile : classes.root} style={{display: "flex", justifyContent: "center"}}>
 			<div className={classes.container}>
 				<div className={classes.upAndMid}>
 					<div className={classes.upper}>
@@ -35,13 +35,43 @@ export default function ClientLayout({children, user}) {
 							</Link>
 							<Flex align='center' gap={"3em"}>
 								<Flex align='center' gap={selectHoliday ? "1em" : "1em"}>
-									<Button type='primary' size='large' onClick={() => router.replace("/")}>
-										Перейти в основное приложение
-									</Button>
+									{!isMobileView && (
+										<Button type='primary' size='large' onClick={() => router.replace("/")}>
+											Перейти в основное приложение
+										</Button>
+									)}
 								</Flex>
 								<Dropdown
 									menu={{
 										items: [
+											isMobileView && {
+												key: "admin",
+												label: "Перейти в основное приложение",
+												onClick: () => {
+													router.replace("/")
+												},
+											},
+											isMobileView && {
+												key: "admin",
+												label: "Главная",
+												onClick: () => {
+													router.replace("/admin")
+												},
+											},
+											isMobileView && {
+												key: "admin/news",
+												label: "Новости",
+												onClick: () => {
+													router.replace("/admin/news")
+												},
+											},
+											isMobileView && {
+												key: "admin/tasks",
+												label: "Задачи",
+												onClick: () => {
+													router.replace("/admin/tasks")
+												},
+											},
 											{
 												label: "Редактировать профиль",
 												key: "profile",
@@ -60,7 +90,7 @@ export default function ClientLayout({children, user}) {
 									}}
 								>
 									<Flex align='center' gap={"1em"}>
-										<div className={classes.profile}>{user?.name}</div>
+										{!isMobileView && <div className={classes.profile}>{user?.name}</div>}
 										<Avatar size={"large"} style={{backgroundColor: user?.color, minWidth: "40px"}} icon={<UserOutlined />} />
 									</Flex>
 								</Dropdown>
@@ -108,25 +138,27 @@ export default function ClientLayout({children, user}) {
 								</Form>
 							</Modal>
 						</Flex>
-						<div className={classes.downInner}>
-							<TabWithNavigation
-								basePath=''
-								items={[
-									{
-										key: "admin",
-										label: "Главная",
-									},
-									{
-										key: "admin/news",
-										label: "Новости",
-									},
-									{
-										key: "admin/tasks",
-										label: "Задачи",
-									},
-								]}
-							/>
-						</div>
+						{!isMobileView && (
+							<div className={classes.downInner}>
+								<TabWithNavigation
+									basePath=''
+									items={[
+										{
+											key: "admin",
+											label: "Главная",
+										},
+										{
+											key: "admin/news",
+											label: "Новости",
+										},
+										{
+											key: "admin/tasks",
+											label: "Задачи",
+										},
+									]}
+								/>
+							</div>
+						)}
 					</div>
 					<div className={classes.content}>
 						<motion.div

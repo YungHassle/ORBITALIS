@@ -3,15 +3,14 @@
 import classes from "./page.module.scss"
 import {Avatar, Carousel, Divider, Flex, Modal, Space, Tag} from "antd"
 import {useState} from "react"
-import {FallOutlined, FundOutlined, PieChartOutlined, RadarChartOutlined, RiseOutlined, UserOutlined} from "@ant-design/icons"
-import {getRandomColor} from "_utils/getRandomColor"
+import {FallOutlined, FundOutlined, PieChartOutlined, RiseOutlined, UserOutlined} from "@ant-design/icons"
 
-export default function ClientPage({leaders, newsList}) {
+export default function ClientPage({leaders, newsList, isMobileView}) {
 	const [modalActive, setModalActive] = useState(false)
 	const [modalData, setModalData] = useState<any>({})
 
 	return (
-		<div className={classes.root}>
+		<div className={isMobileView ? classes.rootMobile : classes.root}>
 			<div className={classes.left}>
 				<Space className={classes.helloGuestsBlock} direction='vertical' size={30}>
 					<img className={classes.imgLogo} src='orb2.jpg' alt='' />

@@ -16,7 +16,7 @@ import dayjs from "dayjs"
 
 const {RangePicker} = DatePicker
 
-export default function ClientLayout({children, user}) {
+export default function ClientLayout({children, user, isMobileView}) {
 	const router = useRouter()
 
 	const path = usePathname()
@@ -25,7 +25,7 @@ export default function ClientLayout({children, user}) {
 	const [profileModal, setProfileModal] = useState(false)
 
 	return (
-		<div className={classes.root} style={{display: "flex", justifyContent: "center"}}>
+		<div className={isMobileView ? classes.rootMobile : classes.root} style={{display: "flex", justifyContent: "center"}}>
 			<div className={classes.container}>
 				<div className={classes.upAndMid}>
 					<div className={classes.upper}>
@@ -38,14 +38,16 @@ export default function ClientLayout({children, user}) {
 							</Link>
 							<Flex align='center' gap={"3em"}>
 								<Flex align='center' gap={selectHoliday ? "1em" : "1em"}>
-									{user?.role === "admin" && (
+									{!isMobileView && user?.role === "admin" && (
 										<Button type='primary' size='large' style={{minWidth: "10em"}} onClick={() => router.replace("/admin")}>
 											Перейти в контрольную панель
 										</Button>
 									)}
-									<Button type='primary' size='large' style={{minWidth: "10em"}}>
-										Пройти тест
-									</Button>
+									{!isMobileView && (
+										<Button type='primary' size='large' style={{minWidth: "10em"}}>
+											Пройти тест
+										</Button>
+									)}
 									{/* {!selectHoliday && (
 										<Button type='primary' size='large' style={{minWidth: "10em"}} onClick={() => setSelectHoliday(true)}>
 											Выбрать отпуск
@@ -71,6 +73,62 @@ export default function ClientLayout({children, user}) {
 								<Dropdown
 									menu={{
 										items: [
+											isMobileView && {
+												key: "/admin",
+												label: "Перейти в контрольную панель",
+												onClick: () => {
+													router.replace("/admin")
+												},
+											},
+											isMobileView && {
+												key: "/test",
+												label: "Пройти тест",
+												onClick: () => {
+													router.replace("/test")
+												},
+											},
+											isMobileView && {
+												key: "/",
+												label: "Главная",
+												onClick: () => {
+													router.replace("/")
+												},
+											},
+											isMobileView && {
+												key: "news",
+												label: "Новости",
+												onClick: () => {
+													router.replace("/news")
+												},
+											},
+											isMobileView && {
+												key: "knowledgebase",
+												label: "База знаний",
+												onClick: () => {
+													router.replace("/knowledgebase")
+												},
+											},
+											isMobileView && {
+												key: "tasks",
+												label: "Задачи",
+												onClick: () => {
+													router.replace("/tasks")
+												},
+											},
+											isMobileView && {
+												key: "company",
+												label: "Компания",
+												onClick: () => {
+													router.replace("/company")
+												},
+											},
+											isMobileView && {
+												key: "calendar",
+												label: "Календарь",
+												onClick: () => {
+													router.replace("/calendar")
+												},
+											},
 											{
 												label: "Редактировать профиль",
 												key: "profile",
@@ -89,7 +147,7 @@ export default function ClientLayout({children, user}) {
 									}}
 								>
 									<Flex align='center' gap={"1em"}>
-										<div className={classes.profile}>{user?.name}</div>
+										{!isMobileView && <div className={classes.profile}>{user?.name}</div>}
 										<Avatar size={"large"} style={{backgroundColor: user?.color, minWidth: "40px"}} icon={<UserOutlined />} />
 									</Flex>
 								</Dropdown>
@@ -137,37 +195,39 @@ export default function ClientLayout({children, user}) {
 								</Form>
 							</Modal>
 						</Flex>
-						<div className={classes.downInner}>
-							<TabWithNavigation
-								basePath=''
-								items={[
-									{
-										key: "/",
-										label: "Главная",
-									},
-									{
-										key: "news",
-										label: "Новости",
-									},
-									{
-										key: "knowledgebase",
-										label: "База знаний",
-									},
-									{
-										key: "tasks",
-										label: "Задачи",
-									},
-									{
-										key: "company",
-										label: "Компания",
-									},
-									{
-										key: "calendar",
-										label: "Календарь",
-									},
-								]}
-							/>
-						</div>
+						{!isMobileView && (
+							<div className={classes.downInner}>
+								<TabWithNavigation
+									basePath=''
+									items={[
+										{
+											key: "/",
+											label: "Главная",
+										},
+										{
+											key: "news",
+											label: "Новости",
+										},
+										{
+											key: "knowledgebase",
+											label: "База знаний",
+										},
+										{
+											key: "tasks",
+											label: "Задачи",
+										},
+										{
+											key: "company",
+											label: "Компания",
+										},
+										{
+											key: "calendar",
+											label: "Календарь",
+										},
+									]}
+								/>
+							</div>
+						)}
 					</div>
 					<div className={classes.content}>
 						<motion.div
