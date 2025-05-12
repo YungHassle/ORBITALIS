@@ -4,6 +4,7 @@ import {createTest, deleteTest, getTests, Test, updateTest} from "_api/admin/tes
 import {ObjectId} from "mongodb"
 import React, {useState} from "react"
 import styles from "./page.module.scss"
+import {Button} from "antd"
 
 const initialQuestion = {
 	question: "",
@@ -194,14 +195,14 @@ export default function ClientPage({testsList}: {testsList: Test[]}) {
 													placeholder='Вариант ответа'
 													required
 												/>
-												<label className={styles.checkboxLabel}>
+												<div className={styles.checkboxLabel}>
 													<input
 														type='checkbox'
 														checked={option.isCorrect}
 														onChange={(e) => handleOptionChange(qIndex, oIndex, "isCorrect", e.target.checked)}
 													/>
 													<span>Правильный</span>
-												</label>
+												</div>
 											</div>
 										))}
 									</div>
@@ -256,12 +257,12 @@ export default function ClientPage({testsList}: {testsList: Test[]}) {
 										))}
 									</div>
 									<div className={styles.cardActions}>
-										<button onClick={() => handleEdit(test)} className={styles.editBtn}>
+										<Button onClick={() => handleEdit(test)} className={styles.editBtn}>
 											Редактировать
-										</button>
-										<button onClick={() => handleDelete(test._id!)} className={styles.deleteBtn}>
+										</Button>
+										<Button danger onClick={() => handleDelete(test._id!)} className={styles.deleteBtn}>
 											Удалить
-										</button>
+										</Button>
 									</div>
 								</div>
 							))}
