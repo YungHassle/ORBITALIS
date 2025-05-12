@@ -12,7 +12,7 @@ export default async function Layout({children}: {children: React.ReactNode}) {
 	}
 
 	if (user?.accept !== true) {
-		redirect(`/auth?waiting=true`)
+		redirect(`/auth/waiting`)
 	}
 	return (
 		<ClientLayout user={user} isMobileView={isMobileView}>

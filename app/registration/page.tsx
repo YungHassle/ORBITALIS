@@ -19,7 +19,7 @@ export default function Page({}) {
 						if (res.error) {
 							return
 						} else {
-							router.replace("/auth?waiting=true")
+							router.replace("/auth/waiting")
 						}
 					})
 				}}
